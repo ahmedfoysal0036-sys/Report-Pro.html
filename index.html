@@ -7,22 +7,48 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; }
-        .ios-card { background: white; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        input, select, textarea { font-size: 17px !important; }
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
+            /* Background Image Setup */
+            background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'); /* Ami ekti similar pro tech image link diyechi, apni apnar file link-ti oikhane dite paren */
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* Glassmorphism Effect for Cards */
+        .ios-card { 
+            background: rgba(255, 255, 255, 0.82); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 20px; 
+            box-shadow: 0 8px 32px rgba(0,0,0,0.2); 
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .sticky-header {
+            background: rgba(255, 255, 255, 0.75);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+        }
+
+        input, select, textarea { font-size: 17px !important; background: rgba(255, 255, 255, 0.9) !important; }
         .btn-action { height: 55px; border-radius: 15px; font-weight: 800; transition: all 0.2s; }
-        .tab-btn.active { color: #2563eb; border-bottom: 2px solid #2563eb; }
+        .tab-btn { color: rgba(255, 255, 255, 0.6); transition: all 0.3s; }
+        .tab-btn.active { color: white; border-bottom: 3px solid white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
+        
         @media print { .no-print { display: none !important; } .print-only { display: block !important; } }
         .print-only { display: none; }
     </style>
 </head>
-<body class="bg-[#F8F9FC] min-h-screen text-slate-800">
+<body class="min-h-screen text-slate-800">
 
-    <div class="sticky top-0 z-50 bg-white border-b border-slate-100 p-4 no-print">
+    <div class="sticky top-0 z-50 sticky-header border-b border-white/20 p-4 no-print">
         <div class="flex justify-between items-center max-w-4xl mx-auto">
             <div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">Daily Activity Report <span class="text-blue-600">PRO</span></h1>
-                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Ahmed_V1.0 Edition</p>
+                <h1 class="text-xl font-black text-slate-900 tracking-tight">Daily activity  <span class="text-blue-600">report</span></h1>
+                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Professor Edition</p>
             </div>
             <div class="text-right flex items-center gap-2">
                 <div>
@@ -31,7 +57,7 @@
                     <p id="liveClock" class="text-sm font-bold text-slate-700"></p>
                     <p id="todayDate" class="text-[10px] text-blue-500 font-bold"></p>
                 </div>
-                <button onclick="toggleTimeEdit()" class="text-slate-300 hover:text-blue-500 transition-colors"><i class="fas fa-calendar-alt text-lg"></i></button>
+                <button onclick="toggleTimeEdit()" class="text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-calendar-alt text-lg"></i></button>
             </div>
         </div>
     </div>
@@ -42,25 +68,25 @@
     </div>
 
     <div id="entrySection" class="max-w-4xl mx-auto p-4 space-y-6">
-        <div class="ios-card p-5 no-print space-y-4 border border-slate-100">
-            <div class="flex items-center justify-between border-b pb-3">
+        <div class="ios-card p-5 no-print space-y-4">
+            <div class="flex items-center justify-between border-b border-black/5 pb-3">
                 <h2 class="font-bold text-slate-600 uppercase text-xs tracking-wider">New Task Entry</h2>
-                <span class="bg-blue-50 text-blue-600 text-[10px] px-2 py-1 rounded-full font-bold">Ahmed Faisal 0036</span>
+                <span class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded-full font-bold">Ahmed Faisal Sys</span>
             </div>
 
             <div class="space-y-1">
-                <label class="text-[11px] font-black text-slate-400 uppercase ml-1">Site Identification</label>
+                <label class="text-[11px] font-black text-slate-500 uppercase ml-1">Site Identification</label>
                 <div class="flex gap-2">
-                    <input list="siteCodes" id="siteCode" class="flex-1 bg-slate-50 border border-slate-200 p-3 rounded-xl focus:border-blue-500 outline-none" placeholder="Enter Site Code">
-                    <button onclick="addNewSite()" class="bg-slate-800 text-white px-4 rounded-xl active:scale-95"><i class="fas fa-plus text-sm"></i></button>
+                    <input list="siteCodes" id="siteCode" class="flex-1 border border-slate-200 p-3 rounded-xl focus:border-blue-500 outline-none shadow-sm" placeholder="Enter Site Code">
+                    <button onclick="addNewSite()" class="bg-slate-900 text-white px-4 rounded-xl active:scale-95"><i class="fas fa-plus text-sm"></i></button>
                     <datalist id="siteCodes"></datalist>
                 </div>
             </div>
 
             <div class="grid grid-cols-2 gap-3">
                 <div class="space-y-1">
-                    <label class="text-[11px] font-black text-slate-400 uppercase ml-1">Client</label>
-                    <select id="clientSelect" onchange="toggleCustomClientInput()" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl outline-none">
+                    <label class="text-[11px] font-black text-slate-500 uppercase ml-1">Client</label>
+                    <select id="clientSelect" onchange="toggleCustomClientInput()" class="w-full border border-slate-200 p-3 rounded-xl outline-none shadow-sm">
                         <option value="ROBI">ROBI</option>
                         <option value="GP">GP</option>
                         <option value="Banglalink">Banglalink</option>
@@ -72,71 +98,70 @@
                     </select>
                 </div>
                 <div class="space-y-1">
-                    <label class="text-[11px] font-black text-slate-400 uppercase ml-1">Work Mode</label>
-                    <select id="opType" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl outline-none">
+                    <label class="text-[11px] font-black text-slate-500 uppercase ml-1">Work Mode</label>
+                    <select id="opType" class="w-full border border-slate-200 p-3 rounded-xl outline-none shadow-sm">
                         <option value="Operation">Operation</option>
                         <option value="Implementation">Implementation</option>
                         <option value="Office Duty">Office Duty</option>
                         <option value="Holiday">Holiday</option>
                         <option value="Others">Others</option>
                         <option value="Leave">Leave</option>
-<option value="PM Activity">PM Activity</option>
                     </select>
                 </div>
             </div>
 
             <div id="customClientContainer" class="hidden">
-                <div class="flex gap-2 bg-blue-50 p-2 rounded-xl border border-blue-100">
+                <div class="flex gap-2 bg-blue-50/50 p-2 rounded-xl border border-blue-200">
                     <input type="text" id="newClientInput" class="flex-1 bg-transparent p-2 outline-none text-sm" placeholder="Type new client name...">
                     <button onclick="addNewClient()" class="bg-blue-600 text-white px-4 rounded-lg text-xs font-bold">ADD</button>
                 </div>
             </div>
 
             <div class="space-y-1">
-                <label class="text-[11px] font-black text-slate-400 uppercase ml-1">Work Description</label>
-                <textarea id="description" class="w-full bg-slate-50 border border-slate-200 p-3 rounded-xl outline-none h-24 focus:border-blue-500" placeholder="Describe the task performed..."></textarea>
+                <label class="text-[11px] font-black text-slate-500 uppercase ml-1">Work Description</label>
+                <textarea id="description" class="w-full border border-slate-200 p-3 rounded-xl outline-none h-24 focus:border-blue-500 shadow-sm" placeholder="Describe the task performed..."></textarea>
             </div>
 
-            <button onclick="saveReport()" class="w-full bg-blue-600 text-white btn-action shadow-lg shadow-blue-100 active:scale-[0.98]">
+            <button onclick="saveReport()" class="w-full bg-blue-600 text-white btn-action shadow-lg shadow-blue-500/30 active:scale-[0.98] hover:bg-blue-700">
                 ADD TO TODAY'S LIST
             </button>
         </div>
 
-        <div class="ios-card overflow-hidden border border-slate-100">
-            <div class="p-4 bg-slate-50 border-b flex justify-between items-center no-print">
+        <div class="ios-card overflow-hidden">
+            <div class="p-4 bg-white/40 border-b border-black/5 flex justify-between items-center no-print">
                 <h2 class="font-black text-slate-700 text-sm tracking-tighter">TASK QUEUE (UNSENT)</h2>
                 <button onclick="sendAllToTelegram()" id="sendAllBtn" class="hidden bg-emerald-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md active:scale-90">
                     <i class="fas fa-paper-plane mr-1"></i> Send & Save
                 </button>
             </div>
-            <div id="recordContainer" class="divide-y divide-slate-50"></div>
-            <div id="emptyMsg" class="p-12 text-center text-slate-400 text-sm italic">Queue is empty.</div>
+            <div id="recordContainer" class="divide-y divide-black/5"></div>
+            <div id="emptyMsg" class="p-12 text-center text-slate-500 text-sm italic">Queue is empty.</div>
         </div>
     </div>
 
     <div id="historySection" class="max-w-4xl mx-auto p-4 space-y-4 hidden">
-        <div class="ios-card p-4 no-print border border-slate-100 space-y-3">
+        <div class="ios-card p-4 no-print space-y-3">
             <h2 class="font-bold text-slate-600 uppercase text-xs tracking-wider">Filter History</h2>
             <div class="flex gap-2">
-                <input type="text" id="filterInput" onkeyup="renderHistory()" class="flex-1 bg-slate-50 border border-slate-200 p-3 rounded-xl text-sm outline-none" placeholder="Search Site or Client...">
-                <button onclick="window.print()" class="bg-slate-800 text-white px-4 rounded-xl active:scale-95"><i class="fas fa-print"></i></button>
+                <input type="text" id="filterInput" onkeyup="renderHistory()" class="flex-1 border border-slate-200 p-3 rounded-xl text-sm outline-none shadow-sm" placeholder="Search Site or Client...">
+                <button onclick="window.print()" class="bg-slate-900 text-white px-4 rounded-xl active:scale-95"><i class="fas fa-print"></i></button>
             </div>
         </div>
         <div id="historyContainer" class="space-y-3"></div>
     </div>
 
     <footer class="text-center p-8 no-print">
-        <p class="text-[9px] font-bold text-slate-300 tracking-[0.3em] uppercase underline decoration-blue-500/30">System Creat by Ahmed Faisal</p>
+        <p class="text-[9px] font-bold text-white/50 tracking-[0.3em] uppercase underline decoration-blue-500/30">System maintained for Professor</p>
     </footer>
 
     <script>
+        // Logics (same as your previous version)
         const botToken = "8582534427:AAHq4TfwFqBIy1wU9mp6bDNQGSeSD49yX94";
         const chatId = "682844989";
 
         let siteList = ["Vendor FAT (Mohammadpur) Office", "Vendor FAT (Ruhitpur) Office", "DHK_T0062", "DHK_X0012", "DHK_X0101", "DHK_X1117", "DHDHR49", "DHK2779"];
         let currentReports = [];
         let historyReports = JSON.parse(localStorage.getItem('prof_reports_history')) || [];
-        let editIndex = -1;
         let isManualTime = false;
 
         function toggleTimeEdit() {
@@ -145,7 +170,6 @@
             document.getElementById('manualTime').classList.toggle('hidden');
             document.getElementById('liveClock').classList.toggle('hidden');
             document.getElementById('todayDate').classList.toggle('hidden');
-            
             if(isManualTime) {
                 const now = new Date();
                 document.getElementById('manualDate').value = now.toISOString().split('T')[0];
@@ -176,7 +200,6 @@
             const client = document.getElementById('clientSelect').value;
             const type = document.getElementById('opType').value;
             const desc = document.getElementById('description').value;
-            
             let date, time;
             if(isManualTime) {
                 date = document.getElementById('manualDate').value.split('-').reverse().join('-');
@@ -185,9 +208,7 @@
                 date = document.getElementById('todayDate').innerText;
                 time = document.getElementById('liveClock').innerText;
             }
-
             if(!site || !desc || client === 'NEW_CLIENT') { alert("Missing Fields!"); return; }
-
             const entry = { date, time, site, client, type, desc, id: Date.now() };
             currentReports.push(entry);
             renderRecords();
@@ -198,26 +219,23 @@
             const container = document.getElementById('recordContainer');
             document.getElementById('emptyMsg').classList.toggle('hidden', currentReports.length > 0);
             document.getElementById('sendAllBtn').classList.toggle('hidden', currentReports.length === 0);
-            
             container.innerHTML = currentReports.map((r, i) => `
-                <div class="p-4 bg-white flex flex-col gap-2">
+                <div class="p-4 flex flex-col gap-2">
                     <div class="flex justify-between">
                         <div><h3 class="font-bold text-slate-800">${r.site}</h3><p class="text-[10px] font-bold text-blue-600 uppercase">${r.client} • ${r.type}</p></div>
-                        <button onclick="currentReports.splice(${i},1);renderRecords();" class="text-red-300 text-xs"><i class="fas fa-trash"></i></button>
+                        <button onclick="currentReports.splice(${i},1);renderRecords();" class="text-red-400 text-xs"><i class="fas fa-trash"></i></button>
                     </div>
-                    <p class="text-slate-500 text-xs border-l-2 border-slate-100 pl-3">${r.desc}</p>
+                    <p class="text-slate-600 text-xs border-l-2 border-blue-500 pl-3">${r.desc}</p>
                 </div>
             `).join('');
         }
 
         async function sendAllToTelegram() {
             if(currentReports.length === 0) return;
-            
-            let message = `*Daily Activity Report*\n*Name:* Ahmed Faisal\n───────────────────\n\n`;
+            let message = `*OFFICIAL DAILY WORK REPORT*\n*Name:* Ahmed Faisal\n───────────────────\n\n`;
             currentReports.forEach((r, idx) => {
                 message += `${idx + 1}. *SITE:* \`${r.site}\`\n   *DATE:* ${r.date} (${r.time})\n   *CLIENT:* ${r.client}\n   *TASK:* ${r.desc}\n\n`;
             });
-
             try {
                 const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                     method: 'POST',
@@ -225,7 +243,7 @@
                     body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'Markdown' })
                 });
                 if(res.ok) {
-                    alert("✅ Sent & Saved to History!");
+                    alert("✅ Sent & Saved!");
                     historyReports = [...currentReports, ...historyReports];
                     localStorage.setItem('prof_reports_history', JSON.stringify(historyReports));
                     currentReports = [];
@@ -237,20 +255,16 @@
         function renderHistory() {
             const query = document.getElementById('filterInput').value.toLowerCase();
             const container = document.getElementById('historyContainer');
-            
-            const filtered = historyReports.filter(r => 
-                r.site.toLowerCase().includes(query) || r.client.toLowerCase().includes(query)
-            );
-
+            const filtered = historyReports.filter(r => r.site.toLowerCase().includes(query) || r.client.toLowerCase().includes(query));
             container.innerHTML = filtered.map((r, i) => `
-                <div class="ios-card p-4 border border-slate-100 bg-white">
+                <div class="ios-card p-4">
                     <div class="flex justify-between items-start mb-2">
-                        <span class="text-[10px] bg-slate-100 px-2 py-1 rounded font-bold">${r.date} | ${r.time}</span>
-                        <button onclick="deleteHistory(${r.id})" class="text-slate-300 no-print"><i class="fas fa-times"></i></button>
+                        <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold">${r.date} | ${r.time}</span>
+                        <button onclick="deleteHistory(${r.id})" class="text-red-300 no-print"><i class="fas fa-times"></i></button>
                     </div>
                     <h4 class="font-black text-slate-800">${r.site}</h4>
                     <p class="text-[10px] text-blue-600 font-bold mb-2">${r.client} • ${r.type}</p>
-                    <p class="text-xs text-slate-500 bg-slate-50 p-2 rounded-lg">${r.desc}</p>
+                    <p class="text-xs text-slate-600 bg-white/50 p-2 rounded-lg">${r.desc}</p>
                 </div>
             `).join('');
         }
@@ -262,11 +276,7 @@
                 renderHistory();
             }
         }
-
-        function addNewSite() {
-            const val = document.getElementById('siteCode').value.trim();
-            if(val && !siteList.includes(val)) { siteList.push(val); updateSiteDatalist(); alert("Registered"); }
-        }
+        function addNewSite() { const val = document.getElementById('siteCode').value.trim(); if(val && !siteList.includes(val)) { siteList.push(val); updateSiteDatalist(); alert("Registered"); } }
         function updateSiteDatalist() { document.getElementById('siteCodes').innerHTML = siteList.map(s => `<option value="${s}">`).join(''); }
         function clearForm() { document.getElementById('siteCode').value = ''; document.getElementById('description').value = ''; }
         function toggleCustomClientInput() { document.getElementById('customClientContainer').classList.toggle('hidden', document.getElementById('clientSelect').value !== 'NEW_CLIENT'); }
