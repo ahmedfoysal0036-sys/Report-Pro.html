@@ -2,290 +2,218 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Report Pro | Official</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AHMED_V4 | Professional Activity System</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
+    
     <style>
-        body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-            /* Background Image Setup */
-            background-image: url('https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2070&auto=format&fit=crop'); /* Ami ekti similar pro tech image link diyechi, apni apnar file link-ti oikhane dite paren */
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-repeat: no-repeat;
+        @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+        body { font-family: 'Roboto', sans-serif; background: #f0f2f5; }
+        @page { size: landscape; margin: 10mm; }
+        @media print {
+            .no-print { display: none !important; }
+            .report-paper { width: 100% !important; margin: 0 !important; border: none !important; box-shadow: none !important; }
+            th, td { border: 1.5px solid black !important; font-size: 10px !important; padding: 4px !important; }
         }
-
-        /* Glassmorphism Effect for Cards */
-        .ios-card { 
-            background: rgba(255, 255, 255, 0.82); 
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-radius: 20px; 
-            box-shadow: 0 8px 32px rgba(0,0,0,0.2); 
-            border: 1px solid rgba(255, 255, 255, 0.3);
-        }
-
-        .sticky-header {
-            background: rgba(255, 255, 255, 0.75);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-        }
-
-        input, select, textarea { font-size: 17px !important; background: rgba(255, 255, 255, 0.9) !important; }
-        .btn-action { height: 55px; border-radius: 15px; font-weight: 800; transition: all 0.2s; }
-        .tab-btn { color: rgba(255, 255, 255, 0.6); transition: all 0.3s; }
-        .tab-btn.active { color: white; border-bottom: 3px solid white; text-shadow: 0 0 10px rgba(255,255,255,0.5); }
-        
-        @media print { .no-print { display: none !important; } .print-only { display: block !important; } }
-        .print-only { display: none; }
+        .report-paper { width: 290mm; background: white; margin: 15px auto; padding: 12mm; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 8px; }
+        table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+        th, td { border: 1px solid black; padding: 6px; font-size: 11px; text-align: center; }
+        .input-box { width: 100%; border: none; outline: none; background: transparent; text-align: center; font-size: 11px; }
+        .editable-head { font-weight: bold; width: 100%; text-align: center; background: transparent; border: none; font-size: 9px; text-transform: uppercase; }
     </style>
 </head>
-<body class="min-h-screen text-slate-800">
+<body>
 
-    <div class="sticky top-0 z-50 sticky-header border-b border-white/20 p-4 no-print">
-        <div class="flex justify-between items-center max-w-4xl mx-auto">
-            <div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">Daily activity  <span class="text-blue-600">report</span></h1>
-                <p class="text-[10px] text-slate-500 uppercase font-bold tracking-widest">Professor Edition</p>
-            </div>
-            <div class="text-right flex items-center gap-2">
-                <div>
-                    <input type="date" id="manualDate" class="hidden text-xs border rounded p-1 outline-none text-blue-600 font-bold border-blue-200">
-                    <input type="time" id="manualTime" class="hidden text-xs border rounded p-1 outline-none text-blue-600 font-bold border-blue-200">
-                    <p id="liveClock" class="text-sm font-bold text-slate-700"></p>
-                    <p id="todayDate" class="text-[10px] text-blue-500 font-bold"></p>
-                </div>
-                <button onclick="toggleTimeEdit()" class="text-slate-400 hover:text-blue-600 transition-colors"><i class="fas fa-calendar-alt text-lg"></i></button>
-            </div>
+    <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 no-print flex justify-between items-center shadow-lg">
+        <div class="flex flex-col">
+            <span class="text-xs text-blue-400 font-bold">PROFESSOR MANAGEMENT SYSTEM</span>
+            <h1 class="font-bold text-lg tracking-tight">AHMED_V4.0</h1>
         </div>
-    </div>
-
-    <div class="max-w-4xl mx-auto flex gap-6 px-4 pt-4 no-print">
-        <button onclick="switchTab('entry')" id="entryTab" class="tab-btn active pb-2 font-bold text-sm uppercase tracking-widest">Entry</button>
-        <button onclick="switchTab('history')" id="historyTab" class="tab-btn pb-2 font-bold text-sm uppercase tracking-widest">History Log</button>
-    </div>
-
-    <div id="entrySection" class="max-w-4xl mx-auto p-4 space-y-6">
-        <div class="ios-card p-5 no-print space-y-4">
-            <div class="flex items-center justify-between border-b border-black/5 pb-3">
-                <h2 class="font-bold text-slate-600 uppercase text-xs tracking-wider">New Task Entry</h2>
-                <span class="bg-blue-600 text-white text-[10px] px-2 py-1 rounded-full font-bold">Ahmed Faisal Sys</span>
-            </div>
-
-            <div class="space-y-1">
-                <label class="text-[11px] font-black text-slate-500 uppercase ml-1">Site Identification</label>
-                <div class="flex gap-2">
-                    <input list="siteCodes" id="siteCode" class="flex-1 border border-slate-200 p-3 rounded-xl focus:border-blue-500 outline-none shadow-sm" placeholder="Enter Site Code">
-                    <button onclick="addNewSite()" class="bg-slate-900 text-white px-4 rounded-xl active:scale-95"><i class="fas fa-plus text-sm"></i></button>
-                    <datalist id="siteCodes"></datalist>
-                </div>
-            </div>
-
-            <div class="grid grid-cols-2 gap-3">
-                <div class="space-y-1">
-                    <label class="text-[11px] font-black text-slate-500 uppercase ml-1">Client</label>
-                    <select id="clientSelect" onchange="toggleCustomClientInput()" class="w-full border border-slate-200 p-3 rounded-xl outline-none shadow-sm">
-                        <option value="ROBI">ROBI</option>
-                        <option value="GP">GP</option>
-                        <option value="Banglalink">Banglalink</option>
-                        <option value="Teletalk">Teletalk</option>
-                        <option value="CCL">CCL</option>
-                        <option value="SCOMM">SCOMM</option>
-                        <option value="STL">STL</option>
-                        <option value="NEW_CLIENT">-- ADD NEW --</option>
-                    </select>
-                </div>
-                <div class="space-y-1">
-                    <label class="text-[11px] font-black text-slate-500 uppercase ml-1">Work Mode</label>
-                    <select id="opType" class="w-full border border-slate-200 p-3 rounded-xl outline-none shadow-sm">
-                        <option value="Operation">Operation</option>
-                        <option value="Implementation">Implementation</option>
-                        <option value="Office Duty">Office Duty</option>
-                        <option value="Holiday">Holiday</option>
-                        <option value="Others">Others</option>
-                        <option value="Leave">Leave</option>
-                    </select>
-                </div>
-            </div>
-
-            <div id="customClientContainer" class="hidden">
-                <div class="flex gap-2 bg-blue-50/50 p-2 rounded-xl border border-blue-200">
-                    <input type="text" id="newClientInput" class="flex-1 bg-transparent p-2 outline-none text-sm" placeholder="Type new client name...">
-                    <button onclick="addNewClient()" class="bg-blue-600 text-white px-4 rounded-lg text-xs font-bold">ADD</button>
-                </div>
-            </div>
-
-            <div class="space-y-1">
-                <label class="text-[11px] font-black text-slate-500 uppercase ml-1">Work Description</label>
-                <textarea id="description" class="w-full border border-slate-200 p-3 rounded-xl outline-none h-24 focus:border-blue-500 shadow-sm" placeholder="Describe the task performed..."></textarea>
-            </div>
-
-            <button onclick="saveReport()" class="w-full bg-blue-600 text-white btn-action shadow-lg shadow-blue-500/30 active:scale-[0.98] hover:bg-blue-700">
-                ADD TO TODAY'S LIST
-            </button>
+        <div class="flex gap-3">
+            <button onclick="switchTab('entry')" class="bg-slate-800 px-4 py-2 rounded-lg text-sm font-bold border border-slate-700">Entry Form</button>
+            <button onclick="switchTab('history')" class="bg-slate-800 px-4 py-2 rounded-lg text-sm font-bold border border-slate-700">History Log</button>
         </div>
+    </nav>
 
-        <div class="ios-card overflow-hidden">
-            <div class="p-4 bg-white/40 border-b border-black/5 flex justify-between items-center no-print">
-                <h2 class="font-black text-slate-700 text-sm tracking-tighter">TASK QUEUE (UNSENT)</h2>
-                <button onclick="sendAllToTelegram()" id="sendAllBtn" class="hidden bg-emerald-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md active:scale-90">
-                    <i class="fas fa-paper-plane mr-1"></i> Send & Save
+    <div id="entrySection">
+        <div class="report-paper">
+            <div class="text-center mb-6">
+                <h1 class="font-bold text-2xl uppercase underline decoration-blue-500 underline-offset-8">Dhanmondi SC</h1>
+                <h2 class="text-xs font-bold text-slate-500 mt-2 uppercase">Daily Activity Report</h2>
+            </div>
+
+            <div class="grid grid-cols-2 gap-12 mb-8">
+                <div class="space-y-3">
+                    <div class="flex items-center border-b border-slate-300 pb-1">
+                        <span class="w-32 font-bold text-[10px] text-slate-600">ASSIGNED BY:</span>
+                        <input type="text" id="assignedBy" class="input-box text-left font-bold" value="MD AZMIR HOSSAIN">
+                    </div>
+                    <div class="flex items-center border-b border-slate-300 pb-1">
+                        <span class="w-32 font-bold text-[10px] text-slate-600">NAME:</span>
+                        <input type="text" id="userName" class="input-box text-left font-bold" value="SM FAISAL AHMED">
+                    </div>
+                    <div class="flex items-center border-b border-slate-300 pb-1">
+                        <span class="w-32 font-bold text-[10px] text-slate-600">DESIGNATION:</span>
+                        <input type="text" id="userDesig" class="input-box text-left font-bold" value="SENIOR SUPERVISOR">
+                    </div>
+                </div>
+                <div class="text-right space-y-3">
+                    <div class="flex justify-end items-center gap-2">
+                        <span class="font-bold text-[10px] text-slate-600">REPORT DATE:</span>
+                        <input type="date" id="reportDate" class="border-b border-slate-300 outline-none text-sm font-bold bg-slate-50 px-2 py-1 rounded">
+                    </div>
+                    <div class="flex justify-end gap-6 font-bold text-[10px] mt-2">
+                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="shiftDay" checked class="accent-blue-600"> DAY</label> 
+                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="shiftNight" class="accent-blue-600"> NIGHT</label>
+                    </div>
+                </div>
+            </div>
+
+            <table id="mainTable">
+                <thead class="bg-slate-100">
+                    <tr>
+                        <th class="w-[4%]">SL</th>
+                        <th class="w-[10%]">Client</th>
+                        <th class="w-[12%]">Site Code</th>
+                        <th class="w-[30%]">Work Details</th>
+                        <th class="w-[8%]"><input type="text" class="editable-head" value="Operation"></th>
+                        <th class="w-[8%]"><input type="text" class="editable-head" value="Implementation"></th>
+                        <th class="w-[8%]"><input type="text" class="editable-head" value="PM"></th>
+                        <th class="w-[8%]"><input type="text" class="editable-head" value="Others"></th>
+                        <th class="w-[12%]">Remarks</th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody"></tbody>
+            </table>
+
+            <div class="mt-8 flex flex-wrap gap-4 no-print justify-center border-t pt-6">
+                <button onclick="saveAndPushTelegram()" class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2 hover:scale-105 transition-all">
+                    <i class="fas fa-paper-plane"></i> SYNC TELEGRAM
+                </button>
+                <button onclick="exportToExcel()" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2 hover:scale-105 transition-all">
+                    <i class="fas fa-file-excel"></i> DOWNLOAD EXCEL
+                </button>
+                <button onclick="window.print()" class="bg-slate-800 text-white px-8 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2">
+                    <i class="fas fa-print"></i> PRINT REPORT
                 </button>
             </div>
-            <div id="recordContainer" class="divide-y divide-black/5"></div>
-            <div id="emptyMsg" class="p-12 text-center text-slate-500 text-sm italic">Queue is empty.</div>
         </div>
     </div>
 
-    <div id="historySection" class="max-w-4xl mx-auto p-4 space-y-4 hidden">
-        <div class="ios-card p-4 no-print space-y-3">
-            <h2 class="font-bold text-slate-600 uppercase text-xs tracking-wider">Filter History</h2>
-            <div class="flex gap-2">
-                <input type="text" id="filterInput" onkeyup="renderHistory()" class="flex-1 border border-slate-200 p-3 rounded-xl text-sm outline-none shadow-sm" placeholder="Search Site or Client...">
-                <button onclick="window.print()" class="bg-slate-900 text-white px-4 rounded-xl active:scale-95"><i class="fas fa-print"></i></button>
-            </div>
+    <div id="historySection" class="hidden p-8 max-w-5xl mx-auto">
+        <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-200">
+            <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="fas fa-database text-blue-500"></i> Local Storage Logs</h2>
+            <div id="historyList" class="space-y-4"></div>
         </div>
-        <div id="historyContainer" class="space-y-3"></div>
     </div>
-
-    <footer class="text-center p-8 no-print">
-        <p class="text-[9px] font-bold text-white/50 tracking-[0.3em] uppercase underline decoration-blue-500/30">System maintained for Professor</p>
-    </footer>
 
     <script>
-        // Logics (same as your previous version)
         const botToken = "8582534427:AAHq4TfwFqBIy1wU9mp6bDNQGSeSD49yX94";
         const chatId = "682844989";
+        
+        // Auto Update Date Logic
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('reportDate').value = today;
 
-        let siteList = ["Vendor FAT (Mohammadpur) Office", "Vendor FAT (Ruhitpur) Office", "DHK_T0062", "DHK_X0012", "DHK_X0101", "DHK_X1117", "DHDHR49", "DHK2779"];
-        let currentReports = [];
-        let historyReports = JSON.parse(localStorage.getItem('prof_reports_history')) || [];
-        let isManualTime = false;
-
-        function toggleTimeEdit() {
-            isManualTime = !isManualTime;
-            document.getElementById('manualDate').classList.toggle('hidden');
-            document.getElementById('manualTime').classList.toggle('hidden');
-            document.getElementById('liveClock').classList.toggle('hidden');
-            document.getElementById('todayDate').classList.toggle('hidden');
-            if(isManualTime) {
-                const now = new Date();
-                document.getElementById('manualDate').value = now.toISOString().split('T')[0];
-                document.getElementById('manualTime').value = now.toTimeString().slice(0,5);
+        function initRows() {
+            const tbody = document.getElementById('tableBody');
+            tbody.innerHTML = '';
+            for(let i=1; i<=15; i++) {
+                tbody.innerHTML += `
+                    <tr>
+                        <td>${i}</td>
+                        <td><input type="text" class="input-box client"></td>
+                        <td><input type="text" class="input-box site font-bold text-blue-700"></td>
+                        <td><textarea class="input-box text-left p-1 h-10 work-desc resize-none"></textarea></td>
+                        <td><input type="checkbox" class="cb scale-125"></td>
+                        <td><input type="checkbox" class="cb scale-125"></td>
+                        <td><input type="checkbox" class="cb scale-125"></td>
+                        <td><input type="checkbox" class="cb scale-125"></td>
+                        <td><input type="text" class="input-box remarks"></td>
+                    </tr>
+                `;
             }
         }
-
-        function updateDateTime() {
-            if(isManualTime) return;
-            const now = new Date();
-            document.getElementById('todayDate').innerText = now.toLocaleDateString('en-GB').replace(/\//g, '-');
-            document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
-        }
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
-        updateSiteDatalist();
+        initRows();
 
         function switchTab(tab) {
-            document.getElementById('entrySection').classList.toggle('hidden', tab !== 'entry');
-            document.getElementById('historySection').classList.toggle('hidden', tab !== 'history');
-            document.getElementById('entryTab').classList.toggle('active', tab === 'entry');
-            document.getElementById('historyTab').classList.toggle('active', tab === 'history');
+            document.getElementById('entrySection').style.display = tab === 'entry' ? 'block' : 'none';
+            document.getElementById('historySection').style.display = tab === 'history' ? 'block' : 'none';
             if(tab === 'history') renderHistory();
         }
 
-        function saveReport() {
-            const site = document.getElementById('siteCode').value;
-            const client = document.getElementById('clientSelect').value;
-            const type = document.getElementById('opType').value;
-            const desc = document.getElementById('description').value;
-            let date, time;
-            if(isManualTime) {
-                date = document.getElementById('manualDate').value.split('-').reverse().join('-');
-                time = document.getElementById('manualTime').value;
-            } else {
-                date = document.getElementById('todayDate').innerText;
-                time = document.getElementById('liveClock').innerText;
-            }
-            if(!site || !desc || client === 'NEW_CLIENT') { alert("Missing Fields!"); return; }
-            const entry = { date, time, site, client, type, desc, id: Date.now() };
-            currentReports.push(entry);
-            renderRecords();
-            clearForm();
-        }
+        async function saveAndPushTelegram() {
+            const date = document.getElementById('reportDate').value;
+            const rows = document.querySelectorAll('#tableBody tr');
+            let dataEntries = [];
+            let telegramText = `🚀 *AHMED REPORT SYSTEM V4*\n📅 Date: \`${date}\`\n👤 By: *SM FAISAL AHMED*\n\n`;
 
-        function renderRecords() {
-            const container = document.getElementById('recordContainer');
-            document.getElementById('emptyMsg').classList.toggle('hidden', currentReports.length > 0);
-            document.getElementById('sendAllBtn').classList.toggle('hidden', currentReports.length === 0);
-            container.innerHTML = currentReports.map((r, i) => `
-                <div class="p-4 flex flex-col gap-2">
-                    <div class="flex justify-between">
-                        <div><h3 class="font-bold text-slate-800">${r.site}</h3><p class="text-[10px] font-bold text-blue-600 uppercase">${r.client} • ${r.type}</p></div>
-                        <button onclick="currentReports.splice(${i},1);renderRecords();" class="text-red-400 text-xs"><i class="fas fa-trash"></i></button>
-                    </div>
-                    <p class="text-slate-600 text-xs border-l-2 border-blue-500 pl-3">${r.desc}</p>
-                </div>
-            `).join('');
-        }
-
-        async function sendAllToTelegram() {
-            if(currentReports.length === 0) return;
-            let message = `*OFFICIAL DAILY WORK REPORT*\n*Name:* Ahmed Faisal\n───────────────────\n\n`;
-            currentReports.forEach((r, idx) => {
-                message += `${idx + 1}. *SITE:* \`${r.site}\`\n   *DATE:* ${r.date} (${r.time})\n   *CLIENT:* ${r.client}\n   *TASK:* ${r.desc}\n\n`;
+            rows.forEach(row => {
+                const site = row.querySelector('.site').value;
+                if(site) {
+                    const desc = row.querySelector('.work-desc').value;
+                    const client = row.querySelector('.client').value;
+                    telegramText += `📌 *Site:* ${site} (${client})\n📝 *Work:* ${desc}\n\n`;
+                    dataEntries.push({ site, client, desc });
+                }
             });
+
+            if(dataEntries.length === 0) return alert("Please enter at least one site data!");
+
+            // Save locally
+            let history = JSON.parse(localStorage.getItem('prof_v4_logs')) || [];
+            history.push({ id: Date.now(), date, entries: dataEntries });
+            localStorage.setItem('prof_v4_logs', JSON.stringify(history));
+
             try {
-                const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+                await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'Markdown' })
+                    body: JSON.stringify({ chat_id: chatId, text: telegramText, parse_mode: 'Markdown' })
                 });
-                if(res.ok) {
-                    alert("✅ Sent & Saved!");
-                    historyReports = [...currentReports, ...historyReports];
-                    localStorage.setItem('prof_reports_history', JSON.stringify(historyReports));
-                    currentReports = [];
-                    renderRecords();
-                }
-            } catch (e) { alert("Network Error"); }
+                alert("SUCCESS: Data synced to Telegram!");
+            } catch (e) { alert("LOCAL SAVE OK: Telegram sync failed (Check Internet/Cookies)."); }
+        }
+
+        function exportToExcel() {
+            const table = document.getElementById("mainTable");
+            const ws = XLSX.utils.table_to_sheet(table);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Activity_Report");
+            XLSX.writeFile(wb, `Report_Ahmed_${document.getElementById('reportDate').value}.xlsx`);
         }
 
         function renderHistory() {
-            const query = document.getElementById('filterInput').value.toLowerCase();
-            const container = document.getElementById('historyContainer');
-            const filtered = historyReports.filter(r => r.site.toLowerCase().includes(query) || r.client.toLowerCase().includes(query));
-            container.innerHTML = filtered.map((r, i) => `
-                <div class="ios-card p-4">
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-[10px] bg-blue-100 text-blue-700 px-2 py-1 rounded font-bold">${r.date} | ${r.time}</span>
-                        <button onclick="deleteHistory(${r.id})" class="text-red-300 no-print"><i class="fas fa-times"></i></button>
+            const list = document.getElementById('historyList');
+            let history = JSON.parse(localStorage.getItem('prof_v4_logs')) || [];
+            list.innerHTML = history.reverse().map(h => `
+                <div class="flex items-center justify-between p-4 bg-slate-50 border rounded-xl hover:bg-white transition-all shadow-sm">
+                    <div>
+                        <p class="font-bold text-slate-800">📅 ${h.date}</p>
+                        <p class="text-xs text-slate-500">Records: ${h.entries.length} Sites</p>
                     </div>
-                    <h4 class="font-black text-slate-800">${r.site}</h4>
-                    <p class="text-[10px] text-blue-600 font-bold mb-2">${r.client} • ${r.type}</p>
-                    <p class="text-xs text-slate-600 bg-white/50 p-2 rounded-lg">${r.desc}</p>
+                    <button onclick="loadFromHistory(${h.id})" class="bg-blue-100 text-blue-700 px-4 py-1 rounded-lg font-bold text-xs uppercase">Re-Load</button>
                 </div>
-            `).join('');
+            `).join('') || '<p class="text-center text-slate-400 py-10">No saved history yet.</p>';
         }
 
-        function deleteHistory(id) {
-            if(confirm("Permanent delete?")) {
-                historyReports = historyReports.filter(r => r.id !== id);
-                localStorage.setItem('prof_reports_history', JSON.stringify(historyReports));
-                renderHistory();
-            }
-        }
-        function addNewSite() { const val = document.getElementById('siteCode').value.trim(); if(val && !siteList.includes(val)) { siteList.push(val); updateSiteDatalist(); alert("Registered"); } }
-        function updateSiteDatalist() { document.getElementById('siteCodes').innerHTML = siteList.map(s => `<option value="${s}">`).join(''); }
-        function clearForm() { document.getElementById('siteCode').value = ''; document.getElementById('description').value = ''; }
-        function toggleCustomClientInput() { document.getElementById('customClientContainer').classList.toggle('hidden', document.getElementById('clientSelect').value !== 'NEW_CLIENT'); }
-        function addNewClient() {
-            const val = document.getElementById('newClientInput').value.trim().toUpperCase();
-            if(val) {
-                const sel = document.getElementById('clientSelect');
-                sel.add(new Option(val, val), sel.options[sel.length-1]);
-                sel.value = val; toggleCustomClientInput();
+        function loadFromHistory(id) {
+            let history = JSON.parse(localStorage.getItem('prof_v4_logs')) || [];
+            const report = history.find(r => r.id === id);
+            if(report) {
+                initRows(); // reset
+                document.getElementById('reportDate').value = report.date;
+                const rows = document.querySelectorAll('#tableBody tr');
+                report.entries.forEach((data, i) => {
+                    if(rows[i]) {
+                        rows[i].querySelector('.site').value = data.site;
+                        rows[i].querySelector('.client').value = data.client;
+                        rows[i].querySelector('.work-desc').value = data.desc;
+                    }
+                });
+                switchTab('entry');
             }
         }
     </script>
