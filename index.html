@@ -11,7 +11,9 @@
         .ios-card { background: white; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         input, select, textarea { font-size: 17px !important; }
         .btn-action { height: 55px; border-radius: 15px; font-weight: 800; transition: all 0.2s; }
-        @media print { .no-print { display: none !important; } }
+        .tab-btn.active { color: #2563eb; border-bottom: 2px solid #2563eb; }
+        @media print { .no-print { display: none !important; } .print-only { display: block !important; } }
+        .print-only { display: none; }
     </style>
 </head>
 <body class="bg-[#F8F9FC] min-h-screen text-slate-800">
@@ -19,22 +21,31 @@
     <div class="sticky top-0 z-50 bg-white border-b border-slate-100 p-4 no-print">
         <div class="flex justify-between items-center max-w-4xl mx-auto">
             <div>
-                <h1 class="text-xl font-black text-slate-900 tracking-tight">DAILY REPORT <span class="text-blue-600">PRO</span></h1>
-                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Professor Edition</p>
+                <h1 class="text-xl font-black text-slate-900 tracking-tight">Daily Activity Report <span class="text-blue-600">PRO</span></h1>
+                <p class="text-[10px] text-slate-400 uppercase font-bold tracking-widest">Ahmed_V1.0 Edition</p>
             </div>
-            <div class="text-right">
-                <p id="liveClock" class="text-sm font-bold text-slate-700"></p>
-                <p id="todayDate" class="text-[10px] text-blue-500 font-bold"></p>
+            <div class="text-right flex items-center gap-2">
+                <div>
+                    <input type="date" id="manualDate" class="hidden text-xs border rounded p-1 outline-none text-blue-600 font-bold border-blue-200">
+                    <input type="time" id="manualTime" class="hidden text-xs border rounded p-1 outline-none text-blue-600 font-bold border-blue-200">
+                    <p id="liveClock" class="text-sm font-bold text-slate-700"></p>
+                    <p id="todayDate" class="text-[10px] text-blue-500 font-bold"></p>
+                </div>
+                <button onclick="toggleTimeEdit()" class="text-slate-300 hover:text-blue-500 transition-colors"><i class="fas fa-calendar-alt text-lg"></i></button>
             </div>
         </div>
     </div>
 
-    <div class="max-w-4xl mx-auto p-4 space-y-6">
-        
+    <div class="max-w-4xl mx-auto flex gap-6 px-4 pt-4 no-print">
+        <button onclick="switchTab('entry')" id="entryTab" class="tab-btn active pb-2 font-bold text-sm uppercase tracking-widest">Entry</button>
+        <button onclick="switchTab('history')" id="historyTab" class="tab-btn pb-2 font-bold text-sm uppercase tracking-widest">History Log</button>
+    </div>
+
+    <div id="entrySection" class="max-w-4xl mx-auto p-4 space-y-6">
         <div class="ios-card p-5 no-print space-y-4 border border-slate-100">
             <div class="flex items-center justify-between border-b pb-3">
                 <h2 class="font-bold text-slate-600 uppercase text-xs tracking-wider">New Task Entry</h2>
-                <span class="bg-blue-50 text-blue-600 text-[10px] px-2 py-1 rounded-full font-bold">Ahmed Faisal Sys</span>
+                <span class="bg-blue-50 text-blue-600 text-[10px] px-2 py-1 rounded-full font-bold">Ahmed Faisal 0036</span>
             </div>
 
             <div class="space-y-1">
@@ -68,12 +79,13 @@
                         <option value="Office Duty">Office Duty</option>
                         <option value="Holiday">Holiday</option>
                         <option value="Others">Others</option>
-                        <option Leave="Others">Leave</option>
+                        <option value="Leave">Leave</option>
+<option value="PM Activity">PM Activity</option>
                     </select>
                 </div>
             </div>
 
-            <div id="customClientContainer" class="hidden animate-pulse">
+            <div id="customClientContainer" class="hidden">
                 <div class="flex gap-2 bg-blue-50 p-2 rounded-xl border border-blue-100">
                     <input type="text" id="newClientInput" class="flex-1 bg-transparent p-2 outline-none text-sm" placeholder="Type new client name...">
                     <button onclick="addNewClient()" class="bg-blue-600 text-white px-4 rounded-lg text-xs font-bold">ADD</button>
@@ -92,62 +104,57 @@
 
         <div class="ios-card overflow-hidden border border-slate-100">
             <div class="p-4 bg-slate-50 border-b flex justify-between items-center no-print">
-                <h2 class="font-black text-slate-700 text-sm tracking-tighter">TASK QUEUE</h2>
+                <h2 class="font-black text-slate-700 text-sm tracking-tighter">TASK QUEUE (UNSENT)</h2>
                 <button onclick="sendAllToTelegram()" id="sendAllBtn" class="hidden bg-emerald-600 text-white px-4 py-2 rounded-lg text-[10px] font-black uppercase tracking-widest shadow-md active:scale-90">
-                    <i class="fas fa-paper-plane mr-1"></i> Send All Reports
+                    <i class="fas fa-paper-plane mr-1"></i> Send & Save
                 </button>
             </div>
-
             <div id="recordContainer" class="divide-y divide-slate-50"></div>
-            <div id="emptyMsg" class="p-12 text-center text-slate-400 text-sm italic">Queue is empty. Add tasks above.</div>
+            <div id="emptyMsg" class="p-12 text-center text-slate-400 text-sm italic">Queue is empty.</div>
         </div>
-
-        <footer class="text-center p-8 no-print">
-            <p class="text-[9px] font-bold text-slate-300 tracking-[0.3em] uppercase underline decoration-blue-500/30">System maintained for Professor</p>
-        </footer>
     </div>
+
+    <div id="historySection" class="max-w-4xl mx-auto p-4 space-y-4 hidden">
+        <div class="ios-card p-4 no-print border border-slate-100 space-y-3">
+            <h2 class="font-bold text-slate-600 uppercase text-xs tracking-wider">Filter History</h2>
+            <div class="flex gap-2">
+                <input type="text" id="filterInput" onkeyup="renderHistory()" class="flex-1 bg-slate-50 border border-slate-200 p-3 rounded-xl text-sm outline-none" placeholder="Search Site or Client...">
+                <button onclick="window.print()" class="bg-slate-800 text-white px-4 rounded-xl active:scale-95"><i class="fas fa-print"></i></button>
+            </div>
+        </div>
+        <div id="historyContainer" class="space-y-3"></div>
+    </div>
+
+    <footer class="text-center p-8 no-print">
+        <p class="text-[9px] font-bold text-slate-300 tracking-[0.3em] uppercase underline decoration-blue-500/30">System Creat by Ahmed Faisal</p>
+    </footer>
 
     <script>
         const botToken = "8582534427:AAHq4TfwFqBIy1wU9mp6bDNQGSeSD49yX94";
         const chatId = "682844989";
 
         let siteList = ["Vendor FAT (Mohammadpur) Office", "Vendor FAT (Ruhitpur) Office", "DHK_T0062", "DHK_X0012", "DHK_X0101", "DHK_X1117", "DHDHR49", "DHK2779"];
-        let reports = [];
+        let currentReports = [];
+        let historyReports = JSON.parse(localStorage.getItem('prof_reports_history')) || [];
         let editIndex = -1;
+        let isManualTime = false;
 
-        function toggleCustomClientInput() {
-            const select = document.getElementById('clientSelect');
-            const container = document.getElementById('customClientContainer');
-            container.classList.toggle('hidden', select.value !== 'NEW_CLIENT');
-        }
-
-        function addNewClient() {
-            const input = document.getElementById('newClientInput');
-            const select = document.getElementById('clientSelect');
-            if(input.value.trim()) {
-                const name = input.value.trim().toUpperCase();
-                const opt = new Option(name, name);
-                select.add(opt, select.options[select.length-1]);
-                select.value = name;
-                input.value = '';
-                toggleCustomClientInput();
+        function toggleTimeEdit() {
+            isManualTime = !isManualTime;
+            document.getElementById('manualDate').classList.toggle('hidden');
+            document.getElementById('manualTime').classList.toggle('hidden');
+            document.getElementById('liveClock').classList.toggle('hidden');
+            document.getElementById('todayDate').classList.toggle('hidden');
+            
+            if(isManualTime) {
+                const now = new Date();
+                document.getElementById('manualDate').value = now.toISOString().split('T')[0];
+                document.getElementById('manualTime').value = now.toTimeString().slice(0,5);
             }
-        }
-
-        function addNewSite() {
-            const val = document.getElementById('siteCode').value.trim();
-            if(val && !siteList.includes(val)) {
-                siteList.push(val);
-                updateSiteDatalist();
-                alert("Site code registered.");
-            }
-        }
-
-        function updateSiteDatalist() {
-            document.getElementById('siteCodes').innerHTML = siteList.map(s => `<option value="${s}">`).join('');
         }
 
         function updateDateTime() {
+            if(isManualTime) return;
             const now = new Date();
             document.getElementById('todayDate').innerText = now.toLocaleDateString('en-GB').replace(/\//g, '-');
             document.getElementById('liveClock').innerText = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
@@ -156,65 +163,60 @@
         updateDateTime();
         updateSiteDatalist();
 
+        function switchTab(tab) {
+            document.getElementById('entrySection').classList.toggle('hidden', tab !== 'entry');
+            document.getElementById('historySection').classList.toggle('hidden', tab !== 'history');
+            document.getElementById('entryTab').classList.toggle('active', tab === 'entry');
+            document.getElementById('historyTab').classList.toggle('active', tab === 'history');
+            if(tab === 'history') renderHistory();
+        }
+
         function saveReport() {
             const site = document.getElementById('siteCode').value;
             const client = document.getElementById('clientSelect').value;
             const type = document.getElementById('opType').value;
             const desc = document.getElementById('description').value;
-            const date = document.getElementById('todayDate').innerText;
+            
+            let date, time;
+            if(isManualTime) {
+                date = document.getElementById('manualDate').value.split('-').reverse().join('-');
+                time = document.getElementById('manualTime').value;
+            } else {
+                date = document.getElementById('todayDate').innerText;
+                time = document.getElementById('liveClock').innerText;
+            }
 
-            if(!site || !desc || client === 'NEW_CLIENT') { alert("Required fields missing."); return; }
+            if(!site || !desc || client === 'NEW_CLIENT') { alert("Missing Fields!"); return; }
 
-            const entry = { date, site, client, type, desc };
-            if(editIndex > -1) { reports[editIndex] = entry; editIndex = -1; }
-            else { reports.push(entry); }
-
+            const entry = { date, time, site, client, type, desc, id: Date.now() };
+            currentReports.push(entry);
             renderRecords();
             clearForm();
         }
 
         function renderRecords() {
             const container = document.getElementById('recordContainer');
-            const sendBtn = document.getElementById('sendAllBtn');
-            const empty = document.getElementById('emptyMsg');
+            document.getElementById('emptyMsg').classList.toggle('hidden', currentReports.length > 0);
+            document.getElementById('sendAllBtn').classList.toggle('hidden', currentReports.length === 0);
             
-            empty.classList.toggle('hidden', reports.length > 0);
-            sendBtn.classList.toggle('hidden', reports.length === 0);
-            
-            container.innerHTML = reports.map((r, i) => `
+            container.innerHTML = currentReports.map((r, i) => `
                 <div class="p-4 bg-white flex flex-col gap-2">
-                    <div class="flex justify-between items-start">
-                        <div>
-                            <h3 class="font-bold text-slate-800 text-base">${r.site}</h3>
-                            <p class="text-[10px] font-bold text-blue-600 uppercase mt-0.5">${r.client} • ${r.type}</p>
-                        </div>
-                        <div class="flex gap-3 no-print">
-                            <button onclick="editReport(${i})" class="text-slate-400 text-xs"><i class="fas fa-pen"></i></button>
-                            <button onclick="deleteReport(${i})" class="text-red-300 text-xs"><i class="fas fa-trash"></i></button>
-                        </div>
+                    <div class="flex justify-between">
+                        <div><h3 class="font-bold text-slate-800">${r.site}</h3><p class="text-[10px] font-bold text-blue-600 uppercase">${r.client} • ${r.type}</p></div>
+                        <button onclick="currentReports.splice(${i},1);renderRecords();" class="text-red-300 text-xs"><i class="fas fa-trash"></i></button>
                     </div>
-                    <p class="text-slate-500 text-xs leading-relaxed border-l-2 border-slate-100 pl-3 py-1">${r.desc}</p>
+                    <p class="text-slate-500 text-xs border-l-2 border-slate-100 pl-3">${r.desc}</p>
                 </div>
             `).join('');
         }
 
         async function sendAllToTelegram() {
-            if(reports.length === 0) return;
+            if(currentReports.length === 0) return;
             
-            let message = ` *OFFICIAL DAILY WORK REPORT*\n`;
-            message += ` *Date:* ${reports[0].date}\n`;
-            message += ` *Name:* Ahmed Faisal\n`;
-            message += `───────────────────\n\n`;
-
-            reports.forEach((r, idx) => {
-                message += `${idx + 1}. *SITE:* \`${r.site}\`\n`;
-                message += `   *CLIENT:* ${r.client}\n`;
-                message += `   *MODE:* ${r.type}\n`;
-                message += `   *TASK:* ${r.desc}\n\n`;
+            let message = `*Daily Activity Report*\n*Name:* Ahmed Faisal\n───────────────────\n\n`;
+            currentReports.forEach((r, idx) => {
+                message += `${idx + 1}. *SITE:* \`${r.site}\`\n   *DATE:* ${r.date} (${r.time})\n   *CLIENT:* ${r.client}\n   *TASK:* ${r.desc}\n\n`;
             });
-
-            message += `───────────────────\n`;
-            message += `_Generated by Report Pro System_`;
 
             try {
                 const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -223,33 +225,60 @@
                     body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'Markdown' })
                 });
                 if(res.ok) {
-                    alert("✅ All reports sent to Telegram!");
-                    reports = [];
+                    alert("✅ Sent & Saved to History!");
+                    historyReports = [...currentReports, ...historyReports];
+                    localStorage.setItem('prof_reports_history', JSON.stringify(historyReports));
+                    currentReports = [];
                     renderRecords();
-                } else {
-                    alert("❌ Transmission Failed.");
                 }
-            } catch (e) { alert("❌ Network Error."); }
+            } catch (e) { alert("Network Error"); }
         }
 
-        function editReport(i) {
-            const r = reports[i];
-            document.getElementById('siteCode').value = r.site;
-            document.getElementById('description').value = r.desc;
-            document.getElementById('clientSelect').value = r.client;
-            document.getElementById('opType').value = r.type;
-            reports.splice(i, 1);
-            renderRecords();
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function renderHistory() {
+            const query = document.getElementById('filterInput').value.toLowerCase();
+            const container = document.getElementById('historyContainer');
+            
+            const filtered = historyReports.filter(r => 
+                r.site.toLowerCase().includes(query) || r.client.toLowerCase().includes(query)
+            );
+
+            container.innerHTML = filtered.map((r, i) => `
+                <div class="ios-card p-4 border border-slate-100 bg-white">
+                    <div class="flex justify-between items-start mb-2">
+                        <span class="text-[10px] bg-slate-100 px-2 py-1 rounded font-bold">${r.date} | ${r.time}</span>
+                        <button onclick="deleteHistory(${r.id})" class="text-slate-300 no-print"><i class="fas fa-times"></i></button>
+                    </div>
+                    <h4 class="font-black text-slate-800">${r.site}</h4>
+                    <p class="text-[10px] text-blue-600 font-bold mb-2">${r.client} • ${r.type}</p>
+                    <p class="text-xs text-slate-500 bg-slate-50 p-2 rounded-lg">${r.desc}</p>
+                </div>
+            `).join('');
         }
 
-        function deleteReport(i) { if(confirm("Remove this entry?")) { reports.splice(i, 1); renderRecords(); } }
+        function deleteHistory(id) {
+            if(confirm("Permanent delete?")) {
+                historyReports = historyReports.filter(r => r.id !== id);
+                localStorage.setItem('prof_reports_history', JSON.stringify(historyReports));
+                renderHistory();
+            }
+        }
 
-        function clearForm() {
-            document.getElementById('siteCode').value = '';
-            document.getElementById('description').value = '';
-            document.getElementById('customClientContainer').classList.add('hidden');
+        function addNewSite() {
+            const val = document.getElementById('siteCode').value.trim();
+            if(val && !siteList.includes(val)) { siteList.push(val); updateSiteDatalist(); alert("Registered"); }
+        }
+        function updateSiteDatalist() { document.getElementById('siteCodes').innerHTML = siteList.map(s => `<option value="${s}">`).join(''); }
+        function clearForm() { document.getElementById('siteCode').value = ''; document.getElementById('description').value = ''; }
+        function toggleCustomClientInput() { document.getElementById('customClientContainer').classList.toggle('hidden', document.getElementById('clientSelect').value !== 'NEW_CLIENT'); }
+        function addNewClient() {
+            const val = document.getElementById('newClientInput').value.trim().toUpperCase();
+            if(val) {
+                const sel = document.getElementById('clientSelect');
+                sel.add(new Option(val, val), sel.options[sel.length-1]);
+                sel.value = val; toggleCustomClientInput();
+            }
         }
     </script>
 </body>
 </html>
+
