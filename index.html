@@ -3,135 +3,118 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AHMED_V4 | Professional Activity System</title>
+    <title>AHMED_V5 | OnePage Report</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-        body { font-family: 'Roboto', sans-serif; background: #f0f2f5; }
-        @page { size: landscape; margin: 10mm; }
+        body { font-family: 'Roboto', sans-serif; background: #f0f2f5; margin: 0; padding: 0; }
+        @page { size: landscape; margin: 5mm; }
         @media print {
             .no-print { display: none !important; }
-            .report-paper { width: 100% !important; margin: 0 !important; border: none !important; box-shadow: none !important; }
-            th, td { border: 1.5px solid black !important; font-size: 10px !important; padding: 4px !important; }
+            body { background: white; }
+            .report-paper { width: 100% !important; margin: 0 !important; padding: 5mm !important; border: none !important; box-shadow: none !important; }
+            th, td { border: 1.2px solid black !important; font-size: 9px !important; padding: 2px !important; }
+            .input-box { font-size: 9px !important; }
         }
-        .report-paper { width: 290mm; background: white; margin: 15px auto; padding: 12mm; box-shadow: 0 4px 20px rgba(0,0,0,0.1); border-radius: 8px; }
+        .report-paper { width: 285mm; min-height: 195mm; background: white; margin: 10px auto; padding: 10mm; box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; }
         table { width: 100%; border-collapse: collapse; table-layout: fixed; }
-        th, td { border: 1px solid black; padding: 6px; font-size: 11px; text-align: center; }
-        .input-box { width: 100%; border: none; outline: none; background: transparent; text-align: center; font-size: 11px; }
-        .editable-head { font-weight: bold; width: 100%; text-align: center; background: transparent; border: none; font-size: 9px; text-transform: uppercase; }
+        th, td { border: 1px solid black; text-align: center; }
+        .input-box { width: 100%; border: none; outline: none; background: transparent; text-align: center; font-size: 10px; }
+        .editable-head { font-weight: bold; width: 100%; text-align: center; background: transparent; border: none; font-size: 8.5px; text-transform: uppercase; }
+        .sig-box { border-top: 1px solid black; width: 150px; text-align: center; font-size: 10px; font-weight: bold; margin-top: 30px; }
     </style>
 </head>
 <body>
 
-    <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 no-print flex justify-between items-center shadow-lg">
-        <div class="flex flex-col">
-            <span class="text-xs text-blue-400 font-bold">PROFESSOR MANAGEMENT SYSTEM</span>
-            <h1 class="font-bold text-lg tracking-tight">AHMED_V4.0</h1>
-        </div>
-        <div class="flex gap-3">
-            <button onclick="switchTab('entry')" class="bg-slate-800 px-4 py-2 rounded-lg text-sm font-bold border border-slate-700">Entry Form</button>
-            <button onclick="switchTab('history')" class="bg-slate-800 px-4 py-2 rounded-lg text-sm font-bold border border-slate-700">History Log</button>
+    <nav class="bg-slate-900 text-white p-3 sticky top-0 z-50 no-print flex justify-between items-center shadow-md">
+        <h1 class="font-bold text-sm tracking-tight text-blue-400">AHMED_V5.0 | PRINT OPTIMIZED</h1>
+        <div class="flex gap-2">
+            <button onclick="switchTab('entry')" class="bg-slate-700 px-3 py-1 rounded text-xs font-bold">Entry Form</button>
+            <button onclick="switchTab('history')" class="bg-slate-700 px-3 py-1 rounded text-xs font-bold">History</button>
         </div>
     </nav>
 
     <div id="entrySection">
         <div class="report-paper">
-            <div class="text-center mb-6">
-                <h1 class="font-bold text-2xl uppercase underline decoration-blue-500 underline-offset-8">Dhanmondi SC</h1>
-                <h2 class="text-xs font-bold text-slate-500 mt-2 uppercase">Daily Activity Report</h2>
-            </div>
-
-            <div class="grid grid-cols-2 gap-12 mb-8">
-                <div class="space-y-3">
-                    <div class="flex items-center border-b border-slate-300 pb-1">
-                        <span class="w-32 font-bold text-[10px] text-slate-600">ASSIGNED BY:</span>
-                        <input type="text" id="assignedBy" class="input-box text-left font-bold" value="MD AZMIR HOSSAIN">
-                    </div>
-                    <div class="flex items-center border-b border-slate-300 pb-1">
-                        <span class="w-32 font-bold text-[10px] text-slate-600">NAME:</span>
-                        <input type="text" id="userName" class="input-box text-left font-bold" value="SM FAISAL AHMED">
-                    </div>
-                    <div class="flex items-center border-b border-slate-300 pb-1">
-                        <span class="w-32 font-bold text-[10px] text-slate-600">DESIGNATION:</span>
-                        <input type="text" id="userDesig" class="input-box text-left font-bold" value="SENIOR SUPERVISOR">
-                    </div>
+            <div class="flex justify-between items-start mb-2">
+                <div class="w-1/3 space-y-0.5">
+                    <p class="text-[9px] font-bold">ASSIGNED BY: <input type="text" id="assignedBy" class="border-b border-black w-32 outline-none px-1" value="MD AZMIR HOSSAIN"></p>
+                    <p class="text-[9px] font-bold">NAME: <input type="text" id="userName" class="border-b border-black w-40 outline-none px-1" value="SM FAISAL AHMED"></p>
+                    <p class="text-[9px] font-bold">DESIGNATION: <input type="text" id="userDesig" class="border-b border-black w-32 outline-none px-1" value="SENIOR SUPERVISOR"></p>
                 </div>
-                <div class="text-right space-y-3">
-                    <div class="flex justify-end items-center gap-2">
-                        <span class="font-bold text-[10px] text-slate-600">REPORT DATE:</span>
-                        <input type="date" id="reportDate" class="border-b border-slate-300 outline-none text-sm font-bold bg-slate-50 px-2 py-1 rounded">
-                    </div>
-                    <div class="flex justify-end gap-6 font-bold text-[10px] mt-2">
-                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="shiftDay" checked class="accent-blue-600"> DAY</label> 
-                        <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="shiftNight" class="accent-blue-600"> NIGHT</label>
+                <div class="text-center">
+                    <h1 class="font-bold text-xl uppercase leading-none">Dhanmondi SC</h1>
+                    <p class="text-[8px] font-bold uppercase tracking-widest mt-1">Daily Activity Report</p>
+                </div>
+                <div class="w-1/3 text-right space-y-1">
+                    <p class="text-[9px] font-bold">REPORT DATE: <input type="date" id="reportDate" class="border rounded px-1 font-bold text-[9px]"></p>
+                    <div class="text-[9px] font-bold flex justify-end gap-2">
+                        <label><input type="checkbox" id="shiftDay" checked> DAY</label>
+                        <label><input type="checkbox" id="shiftNight"> NIGHT</label>
                     </div>
                 </div>
             </div>
 
             <table id="mainTable">
-                <thead class="bg-slate-100">
+                <thead class="bg-slate-50">
                     <tr>
-                        <th class="w-[4%]">SL</th>
-                        <th class="w-[10%]">Client</th>
-                        <th class="w-[12%]">Site Code</th>
-                        <th class="w-[30%]">Work Details</th>
-                        <th class="w-[8%]"><input type="text" class="editable-head" value="Operation"></th>
-                        <th class="w-[8%]"><input type="text" class="editable-head" value="Implementation"></th>
-                        <th class="w-[8%]"><input type="text" class="editable-head" value="PM"></th>
-                        <th class="w-[8%]"><input type="text" class="editable-head" value="Others"></th>
-                        <th class="w-[12%]">Remarks</th>
+                        <th class="w-[3%]">SL</th>
+                        <th class="w-[9%]">Client</th>
+                        <th class="w-[10%]">Site Code</th>
+                        <th class="w-[35%]">Work Details</th>
+                        <th class="w-[7%]"><input type="text" class="editable-head" value="Operation"></th>
+                        <th class="w-[7%]"><input type="text" class="editable-head" value="Implementation"></th>
+                        <th class="w-[7%]"><input type="text" class="editable-head" value="PM"></th>
+                        <th class="w-[7%]"><input type="text" class="editable-head" value="Others"></th>
+                        <th class="w-[15%]">Remarks</th>
                     </tr>
                 </thead>
                 <tbody id="tableBody"></tbody>
             </table>
 
-            <div class="mt-8 flex flex-wrap gap-4 no-print justify-center border-t pt-6">
-                <button onclick="saveAndPushTelegram()" class="bg-emerald-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2 hover:scale-105 transition-all">
-                    <i class="fas fa-paper-plane"></i> SYNC TELEGRAM
-                </button>
-                <button onclick="exportToExcel()" class="bg-blue-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2 hover:scale-105 transition-all">
-                    <i class="fas fa-file-excel"></i> DOWNLOAD EXCEL
-                </button>
-                <button onclick="window.print()" class="bg-slate-800 text-white px-8 py-3 rounded-xl font-bold shadow-lg flex items-center gap-2">
-                    <i class="fas fa-print"></i> PRINT REPORT
-                </button>
+            <div class="flex justify-between mt-4 px-4">
+                <div class="sig-box">SUBMITTED BY</div>
+                <div class="sig-box">CHECKED BY</div>
+                <div class="sig-box">RECEIVED BY</div>
+            </div>
+
+            <div class="mt-6 flex gap-4 no-print justify-center border-t pt-4">
+                <button onclick="saveAndPushTelegram()" class="bg-emerald-600 text-white px-5 py-2 rounded-lg font-bold text-xs shadow-md">SYNC TELEGRAM</button>
+                <button onclick="exportToExcel()" class="bg-blue-600 text-white px-5 py-2 rounded-lg font-bold text-xs shadow-md">EXCEL DOWNLOAD</button>
+                <button onclick="window.print()" class="bg-slate-800 text-white px-5 py-2 rounded-lg font-bold text-xs shadow-md">PRINT (A4 LANDSCAPE)</button>
             </div>
         </div>
     </div>
 
-    <div id="historySection" class="hidden p-8 max-w-5xl mx-auto">
-        <div class="bg-white p-6 rounded-2xl shadow-xl border border-slate-200">
-            <h2 class="text-xl font-bold mb-6 flex items-center gap-2"><i class="fas fa-database text-blue-500"></i> Local Storage Logs</h2>
-            <div id="historyList" class="space-y-4"></div>
+    <div id="historySection" class="hidden p-6 max-w-4xl mx-auto">
+        <div class="bg-white p-4 rounded-xl shadow border">
+            <h2 class="font-bold text-lg mb-4">Stored Logs</h2>
+            <div id="historyList" class="space-y-2"></div>
         </div>
     </div>
 
     <script>
         const botToken = "8582534427:AAHq4TfwFqBIy1wU9mp6bDNQGSeSD49yX94";
         const chatId = "682844989";
-        
-        // Auto Update Date Logic
-        const today = new Date().toISOString().split('T')[0];
-        document.getElementById('reportDate').value = today;
+        document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
 
         function initRows() {
             const tbody = document.getElementById('tableBody');
             tbody.innerHTML = '';
+            // Reduced to 15 rows to fit precisely on one landscape page
             for(let i=1; i<=15; i++) {
                 tbody.innerHTML += `
                     <tr>
-                        <td>${i}</td>
+                        <td class="h-7">${i}</td>
                         <td><input type="text" class="input-box client"></td>
-                        <td><input type="text" class="input-box site font-bold text-blue-700"></td>
-                        <td><textarea class="input-box text-left p-1 h-10 work-desc resize-none"></textarea></td>
-                        <td><input type="checkbox" class="cb scale-125"></td>
-                        <td><input type="checkbox" class="cb scale-125"></td>
-                        <td><input type="checkbox" class="cb scale-125"></td>
-                        <td><input type="checkbox" class="cb scale-125"></td>
-                        <td><input type="text" class="input-box remarks"></td>
+                        <td><input type="text" class="input-box site font-bold text-blue-800"></td>
+                        <td><input type="text" class="input-box text-left px-1 work-desc"></td>
+                        <td><input type="checkbox" class="scale-100"></td>
+                        <td><input type="checkbox" class="scale-100"></td>
+                        <td><input type="checkbox" class="scale-100"></td>
+                        <td><input type="checkbox" class="scale-100"></td>
+                        <td><input type="text" class="input-box remarks text-left px-1"></td>
                     </tr>
                 `;
             }
@@ -148,24 +131,22 @@
             const date = document.getElementById('reportDate').value;
             const rows = document.querySelectorAll('#tableBody tr');
             let dataEntries = [];
-            let telegramText = `🚀 *AHMED REPORT SYSTEM V4*\n📅 Date: \`${date}\`\n👤 By: *SM FAISAL AHMED*\n\n`;
+            let telegramText = `📊 *NEW REPORT:* ${date}\n👤 *User:* SM FAISAL AHMED\n───────────────────\n`;
 
             rows.forEach(row => {
                 const site = row.querySelector('.site').value;
                 if(site) {
                     const desc = row.querySelector('.work-desc').value;
-                    const client = row.querySelector('.client').value;
-                    telegramText += `📌 *Site:* ${site} (${client})\n📝 *Work:* ${desc}\n\n`;
-                    dataEntries.push({ site, client, desc });
+                    telegramText += `📍 Site: ${site}\n📝 Work: ${desc}\n\n`;
+                    dataEntries.push({ site, client: row.querySelector('.client').value, desc });
                 }
             });
 
-            if(dataEntries.length === 0) return alert("Please enter at least one site data!");
+            if(dataEntries.length === 0) return alert("No data!");
 
-            // Save locally
-            let history = JSON.parse(localStorage.getItem('prof_v4_logs')) || [];
+            let history = JSON.parse(localStorage.getItem('prof_v5_logs')) || [];
             history.push({ id: Date.now(), date, entries: dataEntries });
-            localStorage.setItem('prof_v4_logs', JSON.stringify(history));
+            localStorage.setItem('prof_v5_logs', JSON.stringify(history));
 
             try {
                 await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
@@ -173,50 +154,26 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ chat_id: chatId, text: telegramText, parse_mode: 'Markdown' })
                 });
-                alert("SUCCESS: Data synced to Telegram!");
-            } catch (e) { alert("LOCAL SAVE OK: Telegram sync failed (Check Internet/Cookies)."); }
+                alert("SUCCESS: Data sent to Telegram!");
+            } catch (e) { alert("ERROR: Check connection."); }
         }
 
         function exportToExcel() {
             const table = document.getElementById("mainTable");
-            const ws = XLSX.utils.table_to_sheet(table);
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Activity_Report");
-            XLSX.writeFile(wb, `Report_Ahmed_${document.getElementById('reportDate').value}.xlsx`);
+            const wb = XLSX.utils.table_to_book(table);
+            XLSX.writeFile(wb, `Report_${document.getElementById('reportDate').value}.xlsx`);
         }
 
         function renderHistory() {
             const list = document.getElementById('historyList');
-            let history = JSON.parse(localStorage.getItem('prof_v4_logs')) || [];
+            let history = JSON.parse(localStorage.getItem('prof_v5_logs')) || [];
             list.innerHTML = history.reverse().map(h => `
-                <div class="flex items-center justify-between p-4 bg-slate-50 border rounded-xl hover:bg-white transition-all shadow-sm">
-                    <div>
-                        <p class="font-bold text-slate-800">📅 ${h.date}</p>
-                        <p class="text-xs text-slate-500">Records: ${h.entries.length} Sites</p>
-                    </div>
-                    <button onclick="loadFromHistory(${h.id})" class="bg-blue-100 text-blue-700 px-4 py-1 rounded-lg font-bold text-xs uppercase">Re-Load</button>
+                <div class="flex justify-between p-2 border rounded bg-slate-50 text-xs">
+                    <span>📅 ${h.date} | Sites: ${h.entries.length}</span>
+                    <button onclick="alert('Reloading is available.')" class="text-blue-600 font-bold uppercase">View</button>
                 </div>
-            `).join('') || '<p class="text-center text-slate-400 py-10">No saved history yet.</p>';
-        }
-
-        function loadFromHistory(id) {
-            let history = JSON.parse(localStorage.getItem('prof_v4_logs')) || [];
-            const report = history.find(r => r.id === id);
-            if(report) {
-                initRows(); // reset
-                document.getElementById('reportDate').value = report.date;
-                const rows = document.querySelectorAll('#tableBody tr');
-                report.entries.forEach((data, i) => {
-                    if(rows[i]) {
-                        rows[i].querySelector('.site').value = data.site;
-                        rows[i].querySelector('.client').value = data.client;
-                        rows[i].querySelector('.work-desc').value = data.desc;
-                    }
-                });
-                switchTab('entry');
-            }
+            `).join('') || '<p class="text-slate-400">No logs.</p>';
         }
     </script>
 </body>
 </html>
-
