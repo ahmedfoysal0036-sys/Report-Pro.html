@@ -3,94 +3,116 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AHMED_V16 | Batch Master Final</title>
+    <title>AHMED_V16 | Pro Master</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
-        body { font-family: 'Roboto', sans-serif; background: #e2e8f0; margin: 0; padding: 0; }
+        body { font-family: 'Roboto', sans-serif; background: #f1f5f9; margin: 0; padding: 0; }
         
-        .report-outer-container { width: 100%; overflow-x: auto; padding: 10px 0; display: flex; justify-content: flex-start; }
+        .report-outer-container { width: 100%; overflow-x: auto; padding: 20px 0; }
 
-        /* A4 Landscape Layout */
+        /* A4 Landscape Precise Layout */
         .report-paper { 
-            width: 285mm; height: 195mm; background: white !important; padding: 8mm; 
-            position: relative; display: flex; flex-direction: column; justify-content: space-between; 
-            margin: auto; color: black !important; border: 1px solid #ccc;
+            width: 297mm; min-height: 210mm; background: white !important; padding: 10mm; 
+            position: relative; display: flex; flex-direction: column; 
+            margin: auto; color: black !important; border: 0.5px solid #eee;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
         }
 
-        table { width: 100%; border-collapse: collapse; margin-top: 5px; border: 1.5px solid black; }
-        th, td { border: 1px solid black; padding: 4px; text-align: center; font-size: 11px; color: black !important; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; border: 2px solid black; }
+        th, td { border: 1.5px solid black; padding: 6px; text-align: center; font-size: 12px; color: black !important; }
+        th { background-color: #f8fafc !important; font-weight: bold; }
         
-        .input-field { width: 100%; border: none; outline: none; background: transparent; text-align: center; font-size: 11px; }
-        .header-input { border-bottom: 1px solid black; outline: none; font-weight: bold; }
+        .input-field { width: 100%; border: none; outline: none; background: transparent; text-align: center; font-size: 12px; }
+        .header-input { border-bottom: 1px solid #94a3b8; outline: none; font-weight: bold; color: #1e293b; }
         
-        .sig-box { border-top: 1.5px solid black; width: 160px; text-align: center; font-size: 10px; font-weight: bold; margin-top: 20px; }
+        .sig-box { border-top: 2px solid black; width: 180px; text-align: center; font-size: 11px; font-weight: bold; margin-top: 40px; }
 
-        .html2pdf__page-break { page-break-before: always; }
         @media print { .no-print { display: none !important; } }
         
-        /* Loading Overlay */
-        #loader { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.7); z-index:9999; flex-direction:column; justify-content:center; align-items:center; color:white; }
+        #loader { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(15, 23, 42, 0.9); z-index:9999; flex-direction:column; justify-content:center; align-items:center; color:white; }
     </style>
 </head>
 <body>
 
-    <div id="loader"><i class="fas fa-circle-notch fa-spin text-4xl mb-2"></i><p>Generating PDF... Please wait</p></div>
+    <div id="loader">
+        <i class="fas fa-spinner fa-spin text-5xl text-amber-400 mb-4"></i>
+        <p class="text-xl font-bold tracking-widest">PROCESSING PDF...</p>
+        <p class="text-sm opacity-70">Please don't close the window</p>
+    </div>
 
-    <nav class="bg-slate-900 text-white p-3 sticky top-0 z-50 no-print flex justify-between items-center">
-        <div class="flex items-center gap-2">
-            <i class="fas fa-layer-group text-amber-400"></i>
-            <h1 class="font-bold text-xs uppercase tracking-widest">Ahmed_V16 | Pro</h1>
+    <nav class="bg-slate-900 text-white p-4 sticky top-0 z-50 no-print flex justify-between items-center shadow-2xl">
+        <div class="flex items-center gap-3">
+            <div class="bg-amber-400 p-2 rounded-lg text-slate-900"><i class="fas fa-bolt"></i></div>
+            <h1 class="font-black text-sm uppercase tracking-tighter">Ahmed_V16 <span class="text-amber-400">PRO</span></h1>
         </div>
-        <div class="flex gap-2">
-            <button onclick="switchTab('entry')" class="bg-blue-600 px-3 py-1.5 rounded text-[10px] font-bold">ENTRY</button>
-            <button onclick="switchTab('history')" class="bg-slate-700 px-3 py-1.5 rounded text-[10px] font-bold">HISTORY DB</button>
+        <div class="flex gap-3">
+            <button onclick="switchTab('entry')" class="hover:bg-blue-700 px-4 py-2 rounded-md text-xs font-bold transition-all border border-blue-500">ENTRY</button>
+            <button onclick="switchTab('history')" class="bg-slate-700 hover:bg-slate-600 px-4 py-2 rounded-md text-xs font-bold transition-all">DATABASE</button>
         </div>
     </nav>
 
-    <div id="entrySection">
+    <div id="entrySection" class="p-4">
         <div class="report-outer-container">
             <div id="mainReportArea">
-                <div class="report-paper">
-                    <div class="flex justify-between items-start">
-                        <div class="w-1/3 space-y-2">
-                            <p class="text-[11px] font-bold">ASSIGNED BY: <input type="text" id="assignedBy" class="header-input w-40" value="MD AZMIR HOSSAIN"></p>
-                            <p class="text-[11px] font-bold">NAME: <input type="text" id="userName" class="header-input w-48" value="SM FAISAL AHMED"></p>
-                            <p class="text-[11px] font-bold">DESIGNATION: <input type="text" id="userDesig" class="header-input w-40" value="SENIOR SUPERVISOR"></p>
+                <div class="report-paper" id="pdfCaptureArea">
+                    <div class="flex justify-between items-start mb-6">
+                        <div class="w-1/3 space-y-3">
+                            <div>
+                                <label class="text-[10px] text-gray-400 block uppercase">Assigned By</label>
+                                <input type="text" id="assignedBy" class="header-input w-full" value="MD AZMIR HOSSAIN">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 block uppercase">Employee Name</label>
+                                <input type="text" id="userName" class="header-input w-full" value="SM FAISAL AHMED">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 block uppercase font-bold text-blue-600">HR ID (Editable)</label>
+                                <input type="text" id="hrId" class="header-input w-full text-blue-700" value="0036">
+                            </div>
+                            <div>
+                                <label class="text-[10px] text-gray-400 block uppercase">Designation</label>
+                                <input type="text" id="userDesig" class="header-input w-full" value="SENIOR SUPERVISOR">
+                            </div>
                         </div>
+
                         <div class="text-center">
-                            <h1 class="font-bold text-2xl uppercase">Dhanmondi SC</h1>
-                            <p class="text-[10px] font-bold tracking-[0.3em] text-blue-600">Daily Activity Report</p>
+                            <h1 class="font-black text-4xl text-slate-800 tracking-tighter">DHANMONDI SC</h1>
+                            <div class="bg-blue-600 text-white py-1 px-4 mt-2 inline-block rounded-full text-[10px] font-bold tracking-[0.5em] uppercase">Daily Activity Report</div>
                         </div>
-                        <div class="w-1/3 text-right space-y-2">
-                            <p class="text-[11px] font-bold">DATE: <input type="date" id="reportDate" class="border rounded px-1 font-bold"></p>
-                            <div class="flex justify-end gap-3 text-[10px] font-bold">
-                                <label><input type="checkbox" id="shiftDay" checked> DAY</label>
-                                <label><input type="checkbox" id="shiftNight"> NIGHT</label>
+
+                        <div class="w-1/3 text-right space-y-4">
+                            <div>
+                                <label class="text-[10px] text-gray-400 block uppercase">Reporting Date</label>
+                                <input type="date" id="reportDate" class="border-2 border-slate-200 rounded-lg p-2 font-bold text-slate-700">
+                            </div>
+                            <div class="flex justify-end gap-4 text-[11px] font-black bg-slate-100 p-2 rounded-lg inline-flex">
+                                <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="shiftDay" class="w-4 h-4" checked> DAY</label>
+                                <label class="flex items-center gap-1 cursor-pointer"><input type="checkbox" id="shiftNight" class="w-4 h-4"> NIGHT</label>
                             </div>
                         </div>
                     </div>
 
                     <table id="mainTable">
-                        <thead class="bg-slate-50">
+                        <thead>
                             <tr>
                                 <th class="w-[4%]">SL</th>
-                                <th class="w-[10%]">Client</th>
+                                <th class="w-[12%]">Client</th>
                                 <th class="w-[12%]">Site Code</th>
-                                <th class="w-[34%]">Work Details</th>
-                                <th class="w-[7%]">Operation</th>
-                                <th class="w-[7%]">Implement</th>
-                                <th class="w-[7%]">PM</th>
-                                <th class="w-[7%]">OT</th>
-                                <th class="w-[12%]">Remarks</th>
+                                <th class="w-[32%]">Work Details</th>
+                                <th class="w-[6%]">Operation</th>
+                                <th class="w-[6%]">Implementation</th>
+                                <th class="w-[6%]">PM</th>
+                                <th class="w-[6%]">Others</th>
+                                <th class="w-[16%]">Remarks</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody"></tbody>
                     </table>
 
-                    <div class="flex justify-between px-8">
+                    <div class="mt-auto flex justify-between px-10 pb-4">
                         <div class="sig-box">SUBMITTED BY</div>
                         <div class="sig-box">CHECKED BY</div>
                         <div class="sig-box">RECEIVED BY</div>
@@ -99,30 +121,33 @@
             </div>
         </div>
 
-        <div class="fixed bottom-5 right-5 flex flex-col gap-2 no-print">
-            <button onclick="saveCurrentData()" class="bg-amber-500 text-white p-4 rounded-full shadow-xl">
-                <i class="fas fa-save text-xl"></i>
+        <div class="fixed bottom-8 right-8 flex flex-col gap-3 no-print">
+            <button onclick="saveCurrentData()" class="bg-amber-500 hover:bg-amber-600 text-white w-16 h-16 rounded-full shadow-2xl flex items-center justify-center transition-transform active:scale-90">
+                <i class="fas fa-cloud-upload-alt text-2xl"></i>
             </button>
         </div>
     </div>
 
-    <div id="historySection" class="p-4 max-w-5xl mx-auto hidden no-print">
-        <div class="bg-white rounded-xl shadow-lg border p-6">
-            <div class="flex justify-between items-center mb-6 border-b pb-4">
-                <h2 class="font-bold text-xl text-slate-800">History Log</h2>
-                <div class="flex gap-2">
-                    <button onclick="selectAll()" class="text-blue-600 text-xs font-bold">Select All</button>
-                    <button onclick="clearHistory()" class="text-red-500 text-xs font-bold">Clear All</button>
+    <div id="historySection" class="p-6 max-w-5xl mx-auto hidden no-print">
+        <div class="bg-white rounded-3xl shadow-2xl border border-slate-200 overflow-hidden">
+            <div class="bg-slate-900 p-6 flex justify-between items-center text-white">
+                <div>
+                    <h2 class="font-bold text-xl">History Records</h2>
+                    <p class="text-xs text-slate-400">Manage and export your daily logs</p>
+                </div>
+                <div class="flex gap-4">
+                    <button onclick="selectAll()" class="bg-slate-700 px-4 py-2 rounded-lg text-[10px] font-bold">SELECT ALL</button>
+                    <button onclick="clearHistory()" class="bg-red-500/20 text-red-400 px-4 py-2 rounded-lg text-[10px] font-bold">DELETE ALL</button>
                 </div>
             </div>
-            <div id="historyList" class="space-y-3 mb-24"></div>
+            <div id="historyList" class="p-6 space-y-4 min-h-[400px]"></div>
         </div>
 
-        <div class="fixed bottom-0 left-0 w-full bg-white border-t p-4 flex justify-between items-center z-50">
-            <span id="selectCount" class="font-bold text-slate-600 text-sm">0 Selected</span>
-            <div class="flex gap-2">
-                <button onclick="processBatchPDF(true)" class="bg-emerald-600 text-white px-5 py-2 rounded-lg font-bold text-xs">SEND TELEGRAM</button>
-                <button onclick="processBatchPDF(false)" class="bg-red-600 text-white px-5 py-2 rounded-lg font-bold text-xs">DOWNLOAD PDF</button>
+        <div class="fixed bottom-0 left-0 w-full bg-white/80 backdrop-blur-md border-t p-5 flex justify-between items-center z-50 px-10">
+            <div id="selectCount" class="font-black text-slate-800 text-sm">0 RECORDS SELECTED</div>
+            <div class="flex gap-3">
+                <button onclick="processBatchPDF(true)" class="bg-blue-600 hover:bg-blue-700 text-white px-8 py-3 rounded-xl font-bold text-xs shadow-lg shadow-blue-200 transition-all">SEND TO TELEGRAM</button>
+                <button onclick="processBatchPDF(false)" class="bg-slate-800 hover:bg-slate-900 text-white px-8 py-3 rounded-xl font-bold text-xs shadow-lg transition-all">DOWNLOAD PDF</button>
             </div>
         </div>
     </div>
@@ -130,6 +155,7 @@
     <script>
         const botToken = "8582534427:AAHq4TfwFqBIy1wU9mp6bDNQGSeSD49yX94";
         const chatId = "682844989";
+        const DB_NAME = 'prof_v16_db';
         
         document.getElementById('reportDate').value = new Date().toISOString().split('T')[0];
         initRows();
@@ -140,22 +166,22 @@
             for(let i=1; i<=10; i++) {
                 tbody.innerHTML += `
                     <tr>
-                        <td class="h-10 font-bold">${i}</td>
+                        <td class="h-10 font-bold bg-slate-50">${i}</td>
                         <td><input type="text" class="input-field client"></td>
-                        <td><input type="text" class="input-field site font-bold text-blue-800 uppercase"></td>
-                        <td><input type="text" class="input-field text-left px-1 work"></td>
-                        <td><input type="checkbox" class="cb1 scale-125"></td>
-                        <td><input type="checkbox" class="cb2 scale-125"></td>
-                        <td><input type="checkbox" class="cb3 scale-125"></td>
-                        <td><input type="checkbox" class="cb4 scale-125"></td>
+                        <td><input type="text" class="input-field site font-bold text-blue-700 uppercase"></td>
+                        <td><input type="text" class="input-field text-left px-2 work"></td>
+                        <td><input type="checkbox" class="cb1 scale-150 cursor-pointer"></td>
+                        <td><input type="checkbox" class="cb2 scale-150 cursor-pointer"></td>
+                        <td><input type="checkbox" class="cb3 scale-150 cursor-pointer"></td>
+                        <td><input type="checkbox" class="cb4 scale-150 cursor-pointer"></td>
                         <td><input type="text" class="input-field remarks"></td>
                     </tr>`;
             }
         }
 
         function switchTab(tab) {
-            document.getElementById('entrySection').style.display = tab === 'entry' ? 'block' : 'none';
-            document.getElementById('historySection').style.display = tab === 'history' ? 'block' : 'none';
+            document.getElementById('entrySection').classList.toggle('hidden', tab !== 'entry');
+            document.getElementById('historySection').classList.toggle('hidden', tab !== 'history');
             if(tab === 'history') renderHistory();
         }
 
@@ -164,6 +190,7 @@
                 id: Date.now(),
                 date: document.getElementById('reportDate').value,
                 assigned: document.getElementById('assignedBy').value,
+                hrId: document.getElementById('hrId').value, // Saved HR ID
                 rows: Array.from(document.querySelectorAll('#tableBody tr')).map(tr => ({
                     client: tr.querySelector('.client').value,
                     site: tr.querySelector('.site').value,
@@ -175,35 +202,36 @@
                     rem: tr.querySelector('.remarks').value
                 }))
             };
-            let history = JSON.parse(localStorage.getItem('prof_v16_db')) || [];
+            let history = JSON.parse(localStorage.getItem(DB_NAME)) || [];
             history.push(data);
-            localStorage.setItem('prof_v16_db', JSON.stringify(history));
-            alert("✅ Saved!");
+            localStorage.setItem(DB_NAME, JSON.stringify(history));
+            alert("✅ Record Saved Successfully!");
             switchTab('history');
         }
 
         function renderHistory() {
             const list = document.getElementById('historyList');
-            let history = JSON.parse(localStorage.getItem('prof_v16_db')) || [];
-            if(history.length === 0) { list.innerHTML = '<p class="text-center py-10">Empty</p>'; return; }
+            let history = JSON.parse(localStorage.getItem(DB_NAME)) || [];
+            if(history.length === 0) { list.innerHTML = '<div class="text-center py-20 opacity-30 font-bold">NO RECORDS FOUND</div>'; return; }
             list.innerHTML = [...history].reverse().map(h => `
-                <div class="flex items-center gap-3 p-3 bg-slate-50 border rounded-lg">
-                    <input type="checkbox" class="history-chk w-5 h-5" value="${h.id}" onchange="updateCount()">
+                <div class="flex items-center gap-4 p-4 bg-slate-50 border border-slate-200 rounded-2xl hover:border-blue-400 transition-all">
+                    <input type="checkbox" class="history-chk w-6 h-6 rounded-lg" value="${h.id}" onchange="updateCount()">
                     <div class="flex-1">
-                        <p class="font-bold text-sm">📅 ${h.date}</p>
-                        <p class="text-[10px] text-gray-500">${h.assigned}</p>
+                        <p class="font-black text-slate-800">📅 ${h.date}</p>
+                        <p class="text-[10px] text-slate-500 font-bold">ASSIGNED BY: ${h.assigned} | ID: ${h.hrId}</p>
                     </div>
-                    <button onclick="loadReport(${h.id})" class="text-blue-600 text-xs font-bold">EDIT</button>
+                    <button onclick="loadReport(${h.id})" class="text-blue-600 bg-blue-50 px-4 py-2 rounded-lg text-[10px] font-black hover:bg-blue-600 hover:text-white transition-all">EDIT</button>
                 </div>`).join('');
             updateCount();
         }
 
         function loadReport(id) {
-            let history = JSON.parse(localStorage.getItem('prof_v16_db')) || [];
+            let history = JSON.parse(localStorage.getItem(DB_NAME)) || [];
             const h = history.find(item => item.id == id);
             if(!h) return;
             document.getElementById('reportDate').value = h.date;
             document.getElementById('assignedBy').value = h.assigned;
+            document.getElementById('hrId').value = h.hrId || "0036";
             const rows = document.querySelectorAll('#tableBody tr');
             h.rows.forEach((r, i) => {
                 rows[i].querySelector('.client').value = r.client;
@@ -219,109 +247,125 @@
         }
 
         function updateCount() {
-            document.getElementById('selectCount').innerText = `${document.querySelectorAll('.history-chk:checked').length} Selected`;
+            const count = document.querySelectorAll('.history-chk:checked').length;
+            document.getElementById('selectCount').innerText = `${count} RECORDS SELECTED`;
         }
         function selectAll() { document.querySelectorAll('.history-chk').forEach(cb => cb.checked = true); updateCount(); }
-        function clearHistory() { if(confirm("Clear All?")) { localStorage.removeItem('prof_v16_db'); renderHistory(); } }
+        function clearHistory() { if(confirm("Are you sure? This will delete all history database!")) { localStorage.removeItem(DB_NAME); renderHistory(); } }
 
-        // --- FINAL FIX: ON-SCREEN BATCH PROCESSING ---
+        // --- CORE PDF GENERATION LOGIC (FIXED BLINK) ---
         async function processBatchPDF(sendToTelegram) {
             const checkedBoxes = document.querySelectorAll('.history-chk:checked');
-            if(checkedBoxes.length === 0) { alert("Select first!"); return; }
+            if(checkedBoxes.length === 0) { alert("Please select at least one record!"); return; }
             
             document.getElementById('loader').style.display = 'flex';
-            const history = JSON.parse(localStorage.getItem('prof_v16_db')) || [];
-            const mainArea = document.getElementById('mainReportArea');
-            const originalContent = mainArea.innerHTML; // Entry-র অরিজিনাল ডাটা সেভ রাখা
+            const history = JSON.parse(localStorage.getItem(DB_NAME)) || [];
+            
+            // PDF এর জন্য একটি ইনভিজিবল কন্টেইনার তৈরি করা যাতে ইউজার ইন্টারফেসে ব্লিংক না করে
+            const hiddenContainer = document.createElement('div');
+            hiddenContainer.style.position = 'absolute';
+            hiddenContainer.style.left = '-9999px';
+            hiddenContainer.style.top = '0';
+            hiddenContainer.style.width = '297mm';
+            document.body.appendChild(hiddenContainer);
             
             let fullHTML = "";
             checkedBoxes.forEach((cb, idx) => {
                 const data = history.find(h => h.id == cb.value);
                 if(data) {
                     fullHTML += generatePDFTemplate(data);
-                    if(idx < checkedBoxes.length - 1) fullHTML += '<div class="html2pdf__page-break"></div>';
+                    if(idx < checkedBoxes.length - 1) fullHTML += '<div style="page-break-after: always; height:1px;"></div>';
                 }
             });
 
-            // Entry Section এ ডেটা পুশ করা যাতে ব্রাউজার ওটা রেন্ডার করে
-            switchTab('entry');
-            mainArea.innerHTML = fullHTML;
-            window.scrollTo(0,0);
-
-            // ব্রাউজারকে ডাটা পড়ার জন্য ১ সেকেন্ড সময় দেওয়া
-            await new Promise(r => setTimeout(r, 1000));
+            hiddenContainer.innerHTML = fullHTML;
 
             const opt = {
                 margin: 0,
-                filename: `Report_${Date.now()}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, logging: false, scrollY: 0 },
+                filename: `Report_Batch_${Date.now()}.pdf`,
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { scale: 3, useCORS: true, logging: false, letterRendering: true },
                 jsPDF: { unit: 'mm', format: 'a4', orientation: 'landscape' }
             };
 
             try {
                 if (sendToTelegram) {
-                    const pdfBlob = await html2pdf().set(opt).from(mainArea).output('blob');
+                    const pdfBlob = await html2pdf().set(opt).from(hiddenContainer).output('blob');
                     const fd = new FormData();
                     fd.append('chat_id', chatId);
-                    fd.append('document', pdfBlob, `Reports_Batch.pdf`);
-                    await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, { method: 'POST', body: fd });
-                    alert("✅ Sent to Telegram!");
+                    fd.append('document', pdfBlob, `Reports_Batch_${new Date().toLocaleDateString()}.pdf`);
+                    const res = await fetch(`https://api.telegram.org/bot${botToken}/sendDocument`, { method: 'POST', body: fd });
+                    if(res.ok) alert("🚀 Successfully Sent to Telegram!");
+                    else throw new Error("Telegram API Error");
                 } else {
-                    await html2pdf().set(opt).from(mainArea).save();
+                    await html2pdf().set(opt).from(hiddenContainer).save();
                 }
             } catch (e) {
-                alert("Error: " + e.message);
+                alert("Critical Error: " + e.message);
             } finally {
-                mainArea.innerHTML = originalContent; // আগের অবস্থায় ফিরিয়ে আনা
+                document.body.removeChild(hiddenContainer);
                 document.getElementById('loader').style.display = 'none';
-                switchTab('history');
             }
         }
 
         function generatePDFTemplate(data) {
             let trs = "";
             data.rows.forEach((r, i) => {
+                if(!r.client && !r.site && !r.work) return; // খালি রো বাদ দেওয়া হচ্ছে
                 trs += `<tr>
-                    <td style="height:35px; border:1px solid black; font-weight:bold;">${i+1}</td>
-                    <td style="border:1px solid black;">${r.client||''}</td>
-                    <td style="border:1px solid black; font-weight:bold; color:#1e40af;">${r.site||''}</td>
-                    <td style="border:1px solid black; text-align:left; padding-left:4px;">${r.work||''}</td>
-                    <td style="border:1px solid black;">${r.c1?'✔':''}</td>
-                    <td style="border:1px solid black;">${r.c2?'✔':''}</td>
-                    <td style="border:1px solid black;">${r.c3?'✔':''}</td>
-                    <td style="border:1px solid black;">${r.c4?'✔':''}</td>
-                    <td style="border:1px solid black;">${r.rem||''}</td>
+                    <td style="height:38px; border:1.5px solid black; font-weight:bold;">${i+1}</td>
+                    <td style="border:1.5px solid black;">${r.client||''}</td>
+                    <td style="border:1.5px solid black; font-weight:bold; color:#1e40af;">${r.site||''}</td>
+                    <td style="border:1.5px solid black; text-align:left; padding-left:6px;">${r.work||''}</td>
+                    <td style="border:1.5px solid black; font-size:16px;">${r.c1?'✔':''}</td>
+                    <td style="border:1.5px solid black; font-size:16px;">${r.c2?'✔':''}</td>
+                    <td style="border:1.5px solid black; font-size:16px;">${r.c3?'✔':''}</td>
+                    <td style="border:1.5px solid black; font-size:16px;">${r.c4?'✔':''}</td>
+                    <td style="border:1.5px solid black;">${r.rem||''}</td>
                 </tr>`;
             });
 
-            return `<div class="report-paper">
+            return `
+            <div style="width:280mm; min-height:190mm; padding:10mm; background:white; color:black; font-family:sans-serif;">
                 <div style="display:flex; justify-content:space-between; align-items:start;">
-                    <div style="font-size:10px; font-weight:bold; line-height:1.6;">
+                    <div style="font-size:12px; font-weight:bold; line-height:1.6;">
                         <p>ASSIGNED BY: ${data.assigned}</p>
                         <p>NAME: SM FAISAL AHMED</p>
+                        <p style="color:#2563eb;">HR ID: ${data.hrId || '0036'}</p>
                         <p>DESIGNATION: SENIOR SUPERVISOR</p>
                     </div>
                     <div style="text-align:center;">
-                        <h1 style="font-size:20px; margin:0; font-weight:bold;">DHANMONDI SC</h1>
-                        <p style="font-size:9px; letter-spacing:3px; color:#2563eb; font-weight:bold;">DAILY ACTIVITY REPORT</p>
+                        <h1 style="font-size:28px; margin:0; font-weight:black; letter-spacing:-1px;">DHANMONDI SC</h1>
+                        <p style="font-size:10px; letter-spacing:5px; color:#2563eb; font-weight:bold; border:1px solid #2563eb; padding:2px; margin-top:5px;">DAILY ACTIVITY REPORT</p>
                     </div>
-                    <div style="text-align:right; font-size:10px; font-weight:bold;">DATE: ${data.date}</div>
+                    <div style="text-align:right; font-size:12px; font-weight:bold;">
+                        <p>DATE: ${data.date}</p>
+                        <p>STATUS: OFFICIAL RECORD</p>
+                    </div>
                 </div>
-                <table style="width:100%; border-collapse:collapse; border:1.5px solid black; font-size:10px; text-align:center; margin-top:10px;">
+                <table style="width:100%; border-collapse:collapse; border:2px solid black; font-size:11px; text-align:center; margin-top:15px;">
                     <thead style="background:#f1f5f9;">
-                        <tr><th style="border:1px solid black;">SL</th><th style="border:1px solid black;">Client</th><th style="border:1px solid black;">Site Code</th><th style="border:1px solid black;">Work Details</th><th style="border:1px solid black;">OP</th><th style="border:1px solid black;">IM</th><th style="border:1px solid black;">PM</th><th style="border:1px solid black;">OT</th><th style="border:1px solid black;">Remarks</th></tr>
+                        <tr>
+                            <th style="border:1.5px solid black; padding:8px;">SL</th>
+                            <th style="border:1.5px solid black;">Client</th>
+                            <th style="border:1.5px solid black;">Site Code</th>
+                            <th style="border:1.5px solid black;">Work Details</th>
+                            <th style="border:1.5px solid black;">Oparation</th>
+                            <th style="border:1.5px solid black;">Implementation</th>
+                            <th style="border:1.5px solid black;">PM</th>
+                            <th style="border:1.5px solid black;">Others</th>
+                            <th style="border:1.5px solid black;">Remarks</th>
+                        </tr>
                     </thead>
                     <tbody>${trs}</tbody>
                 </table>
-                <div style="display:flex; justify-content:space-between; margin-top:10px;">
-                    <div class="sig-box">SUBMITTED BY</div>
-                    <div class="sig-box">CHECKED BY</div>
-                    <div class="sig-box">RECEIVED BY</div>
+                <div style="display:flex; justify-content:space-between; margin-top:40px;">
+                    <div style="border-top:2px solid black; width:180px; text-align:center; font-size:11px; font-weight:bold; padding-top:5px;">SUBMITTED BY</div>
+                    <div style="border-top:2px solid black; width:180px; text-align:center; font-size:11px; font-weight:bold; padding-top:5px;">CHECKED BY</div>
+                    <div style="border-top:2px solid black; width:180px; text-align:center; font-size:11px; font-weight:bold; padding-top:5px;">RECEIVED BY</div>
                 </div>
             </div>`;
         }
     </script>
 </body>
 </html>
- 
