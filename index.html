@@ -23,12 +23,27 @@
         .header-input { border: none; outline: none; font-weight: bold; font-size: 12px; background: transparent; }
         .table-input { border: none; outline: none; width: 100%; text-align: center; font-size: 11px; background: transparent; height: 100%; padding: 0 5px; }
         
+        .sc-title {
+            font-size: 42px; 
+            font-weight: 400;
+            margin: 0;
+            color: black;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        /* প্রিন্ট ফিক্স */
         @media print { 
             .no-print { display: none !important; }
-            body { background: white !important; padding: 0 !important; }
-            .report-paper { box-shadow: none !important; margin: 0 !important; width: 100% !important; }
-            .print-page-break { page-break-after: always; }
+            body { background: white !important; padding: 0 !important; margin: 0 !important; }
+            /* প্রিন্টের সময় মেইন কন্টেন্ট হাইড করে শুধু প্রিন্ট কন্টেইনার দেখাবে */
+            body > *:not(#printContainer) { display: none !important; }
+            #printContainer { display: block !important; width: 100% !important; }
+            .print-page-break { page-break-after: always; display: block !important; }
+            @page { size: landscape; margin: 0; }
         }
+
+        #printContainer { display: none; }
     </style>
 </head>
 <body class="bg-slate-300">
@@ -53,8 +68,8 @@
         <div id="mainReportArea">
             <div class="report-paper shadow-2xl rounded-sm">
                 <div class="text-center mb-6">
-                    <h1 class="text-4xl font-black tracking-tighter text-slate-900 m-0">DHANMONDI SC</h1>
-                    <p class="text-[11px] font-black tracking-[0.6em] uppercase text-slate-500 mt-1">Daily Activity Report</p>
+                    <h1 class="sc-title">DHANMONDI SC</h1>
+                    <p class="text-[11px] font-bold tracking-[0.6em] uppercase text-slate-500 mt-1">Daily Activity Report</p>
                 </div>
 
                 <div class="flex justify-between items-start mb-6">
@@ -62,7 +77,7 @@
                         <p class="text-[12px] font-bold uppercase">ASSIGNED BY: <input type="text" id="assignedBy" class="header-input w-48 border-b border-gray-100" value="MD AZMIR HOSSAIN"></p>
                         <div class="pt-2">
                             <p class="text-[12px] font-bold uppercase">NAME: <input type="text" id="userName" class="header-input w-52" value="SM FAISAL AHMED"></p>
-                            <p class="text-[12px] font-bold text-blue-700 uppercase">HR ID: <input type="text" id="hrId" class="header-input w-32" value="0036"></p>
+                            <p class="text-[12px] font-bold text-blue-600 uppercase">HR ID: <input type="text" id="hrId" class="header-input w-32" value="0036"></p>
                             <p class="text-[12px] font-bold uppercase">DESIG: <input type="text" id="userDesig" class="header-input w-52" value="SENIOR SUPERVISOR"></p>
                         </div>
                     </div>
@@ -91,16 +106,16 @@
                             <th style="width: 100px;">Implementation</th>
                             <th style="width: 50px;">PM</th>
                             <th style="width: 60px;">Others</th>
-                            <th>Remarks</th>
+                            <th>Team/assign</th>
                         </tr>
                     </thead>
                     <tbody id="tableBody"></tbody>
                 </table>
 
                 <div class="flex justify-between mt-20 px-12">
-                    <div class="border-t-2 border-black w-48 text-center text-[11px] font-black pt-2 uppercase">Submitted By</div>
-                    <div class="border-t-2 border-black w-48 text-center text-[11px] font-black pt-2 uppercase">Checked By</div>
-                    <div class="border-t-2 border-black w-48 text-center text-[11px] font-black pt-2 uppercase">Received By</div>
+                    <div class="border-t-2 border-black w-48 text-center text-[11px] font-bold pt-2 uppercase">Submitted By</div>
+                    <div class="border-t-2 border-black w-48 text-center text-[11px] font-bold pt-2 uppercase">Checked By</div>
+                    <div class="border-t-2 border-black w-48 text-center text-[11px] font-bold pt-2 uppercase">Received By</div>
                 </div>
             </div>
         </div>
@@ -126,7 +141,7 @@
         </div>
     </div>
 
-    <div id="printContainer" class="hidden"></div>
+    <div id="printContainer"></div>
 
     <script>
         const botToken = "8582534427:AAHq4TfwFqBIy1wU9mp6bDNQGSeSD49yX94";
@@ -138,9 +153,9 @@
             tb.innerHTML = '';
             for(let i=1; i<=10; i++) {
                 tb.innerHTML += `<tr>
-                    <td class="font-black bg-gray-50">${i}</td>
+                    <td class="font-bold bg-gray-50">${i}</td>
                     <td><input type="text" class="table-input client"></td>
-                    <td><input type="text" class="table-input font-bold text-blue-800 site uppercase"></td>
+                    <td><input type="text" class="table-input font-bold text-blue-600 site uppercase"></td>
                     <td><input type="text" class="table-input text-left work"></td>
                     <td><input type="checkbox" class="w-5 h-5 accent-black c1"></td>
                     <td><input type="checkbox" class="w-5 h-5 accent-black c2"></td>
@@ -190,7 +205,7 @@
                     <div class="flex items-center gap-4">
                         <input type="checkbox" class="db-chk h-6 w-6 accent-black cursor-pointer" value="${h.id}">
                         <div>
-                            <p class="font-black text-sm text-slate-800">${h.date}</p>
+                            <p class="font-bold text-sm text-slate-800">${h.date}</p>
                             <p class="text-[10px] font-bold text-blue-600 uppercase">Shift: ${h.shift}</p>
                         </div>
                     </div>
@@ -207,24 +222,24 @@
             btn.innerText = allSel ? "Select All" : "Unselect All";
         }
 
-        // সরাসরি ব্রাউজার প্রিন্ট ফাংশন
         function directPrint() {
             const selected = document.querySelectorAll('.db-chk:checked');
             if(selected.length === 0) return alert("Please select a record to print.");
-            
             const db = JSON.parse(localStorage.getItem(DB_KEY)) || [];
             const printCont = document.getElementById('printContainer');
             printCont.innerHTML = '';
             
-            selected.forEach((chk, idx) => {
+            selected.forEach((chk) => {
                 const data = db.find(x => x.id == chk.value);
                 const page = document.createElement('div');
                 page.className = 'print-page-break';
                 page.innerHTML = generatePrintHTML(data);
                 printCont.appendChild(page);
             });
-            
-            window.print();
+
+            setTimeout(() => {
+                window.print();
+            }, 500);
         }
 
         async function generateFinalPDF(isTelegram) {
@@ -234,20 +249,19 @@
             const { jsPDF } = window.jspdf;
             const pdf = new jsPDF('l', 'mm', 'a4');
             const db = JSON.parse(localStorage.getItem(DB_KEY)) || [];
-
             for(let i=0; i < selected.length; i++) {
                 const data = db.find(x => x.id == selected[i].value);
                 const tempDiv = document.createElement('div');
+                tempDiv.style.width = '297mm';
                 tempDiv.style.position = 'absolute'; tempDiv.style.left = '-9999px';
                 tempDiv.innerHTML = generatePrintHTML(data);
                 document.body.appendChild(tempDiv);
-                const canvas = await html2canvas(tempDiv, { scale: 3, useCORS: true });
+                const canvas = await html2canvas(tempDiv, { scale: 2, useCORS: true });
                 const imgData = canvas.toDataURL('image/jpeg', 1.0);
                 if(i > 0) pdf.addPage();
                 pdf.addImage(imgData, 'JPEG', 0, 0, 297, 210);
                 document.body.removeChild(tempDiv);
             }
-
             if(isTelegram) {
                 const blob = pdf.output('blob');
                 const fd = new FormData();
@@ -267,9 +281,9 @@
 
             let rowsHtml = data.rows.map((r, i) => `
                 <tr style="height:35px;">
-                    <td style="border:1.5px solid black; font-weight:900;">${i+1}</td>
+                    <td style="border:1.5px solid black; font-weight:700;">${i+1}</td>
                     <td style="border:1.5px solid black;">${r.c}</td>
-                    <td style="border:1.5px solid black; font-weight:900; color:#1e40af; text-transform:uppercase;">${r.s}</td>
+                    <td style="border:1.5px solid black; font-weight:700; color:#2563eb; text-transform:uppercase;">${r.s}</td>
                     <td style="border:1.5px solid black; text-align:left; padding-left:10px;">${r.w}</td>
                     <td style="border:1.5px solid black;">${getCircle(r.b1)}</td>
                     <td style="border:1.5px solid black;">${getCircle(r.b2)}</td>
@@ -279,28 +293,28 @@
                 </tr>`).join('');
 
             return `
-            <div style="width:282mm; padding:12mm; background:white; font-family: 'Inter', sans-serif; color:black;">
+            <div style="width:297mm; min-height:210mm; padding:12mm; background:white; font-family: 'Inter', sans-serif; color:black; margin:auto;">
                 <div style="text-align:center; margin-bottom:15px;">
-                    <h1 style="margin:0; font-size:45px; font-weight:900; letter-spacing:-2px;">DHANMONDI SC</h1>
-                    <p style="margin:2px 0 0 0; font-size:11px; font-weight:900; letter-spacing:8px; text-transform:uppercase; color:#64748b;">Daily Activity Report</p>
+                    <h1 style="margin:0; font-size:42px; font-weight:400; color:black; text-transform:uppercase; letter-spacing:2px;">DHANMONDI SC</h1>
+                    <p style="margin:2px 0 0 0; font-size:11px; font-weight:700; letter-spacing:8px; text-transform:uppercase; color:#64748b;">Daily Activity Report</p>
                 </div>
                 
                 <div style="display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:20px;">
-                    <div style="font-size:13px; line-height:1.6; vertical-align:top;">
-                        <b style="display:inline-block; margin-top:0;">ASSIGNED BY:</b> ${data.assigned}<br>
+                    <div style="font-size:13px; line-height:1.6;">
+                        <b>ASSIGNED BY:</b> ${data.assigned}<br>
                         <b>NAME:</b> SM FAISAL AHMED<br>
-                        <b style="color:#1d4ed8;">HR ID: ${data.hr}</b><br>
+                        <b style="color:#2563eb;">HR ID: ${data.hr}</b><br>
                         <b>DESIG:</b> SENIOR SUPERVISOR
                     </div>
-                    <div style="text-align:right; font-size:13px; vertical-align:top;">
-                        <b style="display:inline-block; margin-top:0;">DATE:</b> ${data.date}<br>
+                    <div style="text-align:right; font-size:13px;">
+                        <b>DATE:</b> ${data.date}<br>
                         <div style="margin-top:8px;">
-                            <b style="font-size:18px; text-transform:uppercase; font-weight:900;">SHIFT: ${data.shift}</b>
+                            <b style="font-size:16px; text-transform:uppercase; font-weight:700;">SHIFT: ${data.shift}</b>
                         </div>
                     </div>
                 </div>
 
-                <table style="width:100%; border-collapse:collapse; text-align:center; font-size:11px; border:2.5px solid black;">
+                <table style="width:100%; border-collapse:collapse; text-align:center; font-size:11px; border:1.5px solid black;">
                     <thead>
                         <tr style="background:#f8fafc; height:42px;">
                             <th style="border:1.5px solid black; width:35px;">SL</th>
@@ -318,12 +332,13 @@
                 </table>
 
                 <div style="display:flex; justify-content:space-between; margin-top:85px; padding: 0 60px;">
-                    <div style="border-top:2px solid black; width:200px; text-align:center; font-size:12px; font-weight:900; padding-top:10px;">SUBMITTED BY</div>
-                    <div style="border-top:2px solid black; width:200px; text-align:center; font-size:12px; font-weight:900; padding-top:10px;">CHECKED BY</div>
-                    <div style="border-top:2px solid black; width:200px; text-align:center; font-size:12px; font-weight:900; padding-top:10px;">RECEIVED BY</div>
+                    <div style="border-top:1.5px solid black; width:200px; text-align:center; font-size:12px; font-weight:700; padding-top:10px;">SUBMITTED BY</div>
+                    <div style="border-top:1.5px solid black; width:200px; text-align:center; font-size:12px; font-weight:700; padding-top:10px;">CHECKED BY</div>
+                    <div style="border-top:1.5px solid black; width:200px; text-align:center; font-size:12px; font-weight:700; padding-top:10px;">RECEIVED BY</div>
                 </div>
             </div>`;
         }
+
         function deleteItem(id) { if(confirm("Permanently delete this report?")) { let db = JSON.parse(localStorage.getItem(DB_KEY)); db = db.filter(x => x.id != id); localStorage.setItem(DB_KEY, JSON.stringify(db)); renderHistory(); } }
     </script>
 </body>
